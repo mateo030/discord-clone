@@ -1,6 +1,7 @@
+import type { Room } from "../types/api";
+
 import { api } from "./configs/axiosConfigs";
 import { defineCancelApiObject } from "./configs/axiosUtils";
-import type { ApiResponse, Room } from "../types/api";
 
 // TODO: Change return type to ApiResponse when implementing backend
 export const roomAPI = {

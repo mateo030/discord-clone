@@ -1,16 +1,23 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Auth } from "./pages/Auth/Auth";
-import { Dash } from "./pages/Dash/Dash";
+
+import { AuthProvider } from "@/context/authContext";
+import { Auth } from "@/pages/Auth/Auth";
+import { Dash } from "@/pages/Dash/Dash";
+import { ProtectedRoute } from "@/routes/protectedRoute";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Auth />}></Route>
-        <Route path="/dash" element={<Dash />}></Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Auth />}></Route>
+          <Route path="/dash" element={<ProtectedRoute />}>
+            <Route index element={<Dash />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 };
 

@@ -1,6 +1,7 @@
+import type { Message } from "../types/api";
+
 import { api } from "./configs/axiosConfigs";
 import { defineCancelApiObject } from "./configs/axiosUtils";
-import type { ApiResponse, Message } from "../types/api";
 
 // TODO: Change return type to ApiResponse when implementing backend
 export const messageAPI = {

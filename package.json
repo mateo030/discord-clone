@@ -11,9 +11,13 @@
   ],
   "description": "",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint-plugin-react": "^7.37.5",
+    "vite-tsconfig-paths": "^6.1.1"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npm run dev -w frontend"
   },
   "repository": {
     "type": "git",
@@ -27,5 +31,4 @@
     "url": "https://github.com/mateo030/discord-clone/issues"
   },
   "homepage": "https://github.com/mateo030/discord-clone#readme"
-
 }

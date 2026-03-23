@@ -1,65 +1,90 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { LoginForm } from "@/components/LoginForm";
+import { RegisterForm } from "@/components/RegisterForm";
+import { useAuth } from "@/context/authContext";
+
 import "./style.css";
 
+interface RegisterFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+type FormMode = "login" | "register";
+
 export const Auth: React.FC = () => {
-  const [isRegisterForm, setIsRegisterForm] = useState<boolean>(false);
+  const [formMode, setFormMode] = useState<FormMode>("login");
+  const [loginData, setLoginData] = useState<LoginFormData>({
+    email: "",
+    password: "",
+  });
+  const [registerData, setRegisterData] = useState<RegisterFormData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const toggleMode = () => {
+    setFormMode((prevMode) => (prevMode === "login" ? "register" : "login"));
+  };
+
+  const handleLoginFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setLoginData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    login("dummyToken");
+    console.log("Login Data: ", loginData);
+    navigate("/dash");
+  };
+
+  const handleRegisterFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setRegisterData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleRegister = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    console.log("Register Data:", registerData);
+  };
 
   return (
     <div className="container">
-      {isRegisterForm ? (
-        <>
-          <form>
-            <h1>Welcome to SlackClone!</h1>
-            <h2>Create an account now</h2>
-            <div className="name-row">
-              <div className="form-group">
-                <label htmlFor="firstName">First Name</label>
-                <input type="text" id="firstName" required />
-              </div>
-              <div className="form-group">
-                <label htmlFor="lastName">Last Name</label>
-                <input type="text" id="firstName" required />
-              </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input type="email" id="email" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input type="password" id="password" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Confirm Password</label>
-              <input type="password" id="password" required />
-            </div>
-            <span>Forgot Password?</span>
-            <span onClick={() => setIsRegisterForm(false)}>
-              Already have an account?
-            </span>
-            <button>Sign In</button>
-          </form>
-        </>
+      {formMode === "register" ? (
+        <RegisterForm
+          onFormChange={handleRegisterFormChange}
+          onRegister={handleRegister}
+          toggleMode={toggleMode}
+        />
       ) : (
-        <>
-          <form>
-            <h1>Welcome to SlackClone!</h1>
-            <h2>Communicate easily with your friends</h2>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input type="email" id="email" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input type="password" id="password" required />
-            </div>
-            <span>Forgot Password?</span>
-            <span onClick={() => setIsRegisterForm(true)}>
-              Already have an account?
-            </span>
-            <button>Sign Up</button>
-          </form>
-        </>
+        <LoginForm
+          onFormChange={handleLoginFormChange}
+          onLogin={handleLogin}
+          toggleMode={toggleMode}
+        />
       )}
     </div>
   );

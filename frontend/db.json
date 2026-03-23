@@ -85,7 +85,7 @@
     {
       "id": "dm-1",
       "room_id": null,
-      "channel_name": null,
+      "channel_name": "test",
       "is_dm": true,
       "is_deleted": false
     }
