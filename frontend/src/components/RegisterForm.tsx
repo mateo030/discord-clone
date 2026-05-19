@@ -1,7 +1,9 @@
+type FormMode = "login" | "register" | "verify";
+
 type RegisterFormProps = {
   onFormChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRegister: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  toggleMode: () => void;
+  toggleMode: (formMode: FormMode) => void;
 };
 
 export const RegisterForm: React.FC<RegisterFormProps> = ({
@@ -13,15 +15,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     <form>
       <h1>Welcome to SlackClone!</h1>
       <h2>Create an account now</h2>
-      <div className="name-row">
-        <div className="form-group">
-          <label htmlFor="firstName">First Name</label>
-          <input type="text" id="firstName" onChange={onFormChange} required />
-        </div>
-        <div className="form-group">
-          <label htmlFor="lastName">Last Name</label>
-          <input type="text" id="lastName" onChange={onFormChange} required />
-        </div>
+      <div className="form-group">
+        <label htmlFor="username">Username</label>
+        <input type="text" id="username" onChange={onFormChange} required />
       </div>
       <div className="form-group">
         <label htmlFor="email">Email</label>
@@ -41,7 +37,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         />
       </div>
       <span>Forgot Password?</span>
-      <span onClick={toggleMode}>Already have an account?</span>
+      <span onClick={() => toggleMode("login")}>Already have an account?</span>
       <button onClick={onRegister}>Sign In</button>
     </form>
   );

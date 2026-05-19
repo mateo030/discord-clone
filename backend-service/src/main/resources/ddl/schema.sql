@@ -1,12 +1,13 @@
 CREATE TABLE users (
     id uuid PRIMARY KEY,
     role varchar(255) NOT NULL,
-    user_email varchar(255) NOT NULL UNIQUE,
-    user_password varchar(255) NOT NULL,
-    user_first_name varchar(255) NOT NULL,
-    user_last_name varchar(255) NOT NULL,
+    username varchar(255) NOT NULL UNIQUE,
+    email varchar(255) NOT NULL UNIQUE,
+    password varchar(255) NOT NULL,
+    enabled boolean DEFAULT false NOT NULL,
+    verification_code varchar(255),
+    verification_expires_datetime timestamp,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_user_id uuid NOT NULL,
     updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_user_id uuid NOT NULL,
     is_deleted boolean NOT NULL DEFAULT false

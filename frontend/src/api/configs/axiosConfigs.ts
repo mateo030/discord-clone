@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 
 export const api = axios.create({
   withCredentials: false,
-  baseURL: "http://localhost:3000/", // TODO: Switch with actual API domain
+  baseURL: "/api", // TODO: Switch with actual API domain
 });
 
 /**

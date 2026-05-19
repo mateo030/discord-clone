@@ -7,18 +7,22 @@ type SideBarProps = {
   roomList: Room[];
   channelList: Channel[];
   dmChannel: Channel[];
-  handleRoomClick(roomId: string): void;
-  handleChannelClick(channelId: string, channelName: string): void;
+  onRoomClick(roomId: string): void;
+  onChannelClick(channelId: string, channelName: string): void;
   handleLogout(): void;
+  onCreateRoom(): void;
+  onCreateRoomFormChange(e: React.ChangeEvent<HTMLInputElement>): void;
 };
 
 export const SideBar: React.FC<SideBarProps> = ({
   roomList,
   channelList,
   dmChannel,
-  handleRoomClick,
-  handleChannelClick,
+  onRoomClick,
+  onChannelClick,
   handleLogout,
+  onCreateRoom,
+  onCreateRoomFormChange,
 }) => {
   const [isRoomModalOpen, setIsRoomModalOpen] = useState<boolean>(false);
   const [isChannelModalOpen, setIsChannelModalOpen] = useState<boolean>(false);
@@ -40,11 +44,7 @@ export const SideBar: React.FC<SideBarProps> = ({
         </div>
         <ul>
           {roomList.map((room, index) => (
-            <li
-              role="button"
-              key={index}
-              onClick={() => handleRoomClick(room.id)}
-            >
+            <li role="button" key={index} onClick={() => onRoomClick(room.id)}>
               {room.room_name}
             </li>
           ))}
@@ -64,9 +64,7 @@ export const SideBar: React.FC<SideBarProps> = ({
             <li
               role="button"
               key={index}
-              onClick={() =>
-                handleChannelClick(channel.id, channel.channel_name)
-              }
+              onClick={() => onChannelClick(channel.id, channel.channel_name)}
             >
               # {channel.channel_name}
             </li>
@@ -80,9 +78,7 @@ export const SideBar: React.FC<SideBarProps> = ({
             <li
               role="button"
               key={index}
-              onClick={() =>
-                handleChannelClick(channel.id, channel.channel_name)
-              }
+              onClick={() => onChannelClick(channel.id, channel.channel_name)}
             >
               {channel.channel_name}
             </li>
@@ -102,8 +98,14 @@ export const SideBar: React.FC<SideBarProps> = ({
         title="Create your room"
       >
         <div className="input-group">
-          <input type="text" id="roomName" placeholder="My room" required />
-          <button>Create</button>
+          <input
+            type="text"
+            id="roomName"
+            placeholder="My room"
+            required
+            onChange={onCreateRoomFormChange}
+          />
+          <button onClick={onCreateRoom}>Create</button>
         </div>
         <h2>Have an invite already?</h2>
         <div className="input-group">

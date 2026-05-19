@@ -21,6 +21,24 @@ export const roomAPI = {
       throw error;
     }
   },
+
+  post: async function (cancel = false, params: any): Promise<Room[]> {
+    try {
+      const response = await api.request<Room[]>({
+        url: "/rooms/create",
+        method: "POST",
+        data: params,
+        signal: cancel
+          ? cancelApiObject[this.get.name].handleRequestCancellation().signal
+          : undefined,
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(error.message);
+      throw error;
+    }
+  },
 };
 
 const cancelApiObject = defineCancelApiObject(roomAPI);

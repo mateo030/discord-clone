@@ -1,7 +1,9 @@
+type FormMode = "login" | "register" | "verify";
+
 type LoginFormProps = {
   onFormChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onLogin: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  toggleMode: () => void;
+  toggleMode: (formMode: FormMode) => void;
 };
 
 export const LoginForm: React.FC<LoginFormProps> = ({
@@ -22,7 +24,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         <input type="password" id="password" onChange={onFormChange} required />
       </div>
       <span>Forgot Password?</span>
-      <span onClick={toggleMode}>Already have an account?</span>
+      <span onClick={() => toggleMode("register")}>Dont have an account?</span>
       <button onClick={onLogin}>Sign In</button>
     </form>
   );

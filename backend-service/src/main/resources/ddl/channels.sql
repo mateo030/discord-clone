@@ -1,0 +1,55 @@
+INSERT INTO channels (
+  id,
+  room_id,
+  channel_name,
+  is_dm,
+  created_at,
+  created_user_id,
+  updated_at,
+  updated_user_id,
+  is_deleted
+) VALUES
+(
+  'fe870596-b088-4d5d-bd05-4eaa67592a91',
+  'bbfd57c1-2b42-41c2-aa3f-5e4a395fed68',
+  'general',
+  false,
+  CURRENT_TIMESTAMP,
+  '079d7889-eef0-4722-a428-77539d090714',
+  CURRENT_TIMESTAMP,
+  '079d7889-eef0-4722-a428-77539d090714',
+  false
+),
+(
+  'c1d5e3b4-94a6-4f22-a5db-60c1aab8d909',
+  'bbfd57c1-2b42-41c2-aa3f-5e4a395fed68',
+  'development',
+  false,
+  CURRENT_TIMESTAMP,
+  '2e9f8a47-3d3b-45f6-b1cd-7a9f4d1b2d35',
+  CURRENT_TIMESTAMP,
+  '2e9f8a47-3d3b-45f6-b1cd-7a9f4d1b2d35',
+  false
+),
+(
+  'a6f22c3d-8b70-4c1f-b6e1-1d8b4f231234',
+  'd4b2a5f8-6c3e-4e7d-9f1a-2b3c4d5e6f70',
+  'dm-079d7889-eef0-4722-a428-77539d090714',
+  true,
+  CURRENT_TIMESTAMP,
+  '079d7889-eef0-4722-a428-77539d090714',
+  CURRENT_TIMESTAMP,
+  '079d7889-eef0-4722-a428-77539d090714',
+  false
+),
+(
+  'f9c8b7a6-1234-4bcd-8e9f-0a1b2c3d4e5f',
+  'bbfd57c1-2b42-41c2-aa3f-5e4a395fed68',
+  'archive',
+  false,
+  CURRENT_TIMESTAMP,
+  '5f4e3d2c-1b0a-4f3e-9d8c-7b6a5f4e3d2c',
+  CURRENT_TIMESTAMP,
+  '5f4e3d2c-1b0a-4f3e-9d8c-7b6a5f4e3d2c',
+  true
+);

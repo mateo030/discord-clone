@@ -40,3 +40,16 @@ export interface Message {
   updated_user: string;
   delete_flag: boolean;
 }
+
+export interface User {
+  id: string;
+  role: string;
+  user_email: string;
+  user_first_name: string;
+  user_last_name: string;
+  created_at: string;
+  created_user: string;
+  updated_at: string;
+  updated_user: string;
+  delete_flag: boolean;
+}

@@ -1,0 +1,70 @@
+# *** Create a new user ***
+POST http://localhost:8080/api/users/create
+Content-Type: application/json
+
+{
+  "role": "USER",
+  "userEmail": "mateo.bonete@gmail.com",
+  "userPassword": "test12345678",
+  "userFirstName": "Mateo",
+  "userLastName": "Bonete",
+  "createdAt": "2024-06-01T12:00:00Z",
+  "createdUserId": "ef266218-ef3f-47dd-98a3-7f2c406999a2",
+  "updatedAt": "2024-06-01T12:00:00Z",
+  "updatedUserId": "ef266218-ef3f-47dd-98a3-7f2c406999a2",
+  "isDeleted": false
+}
+
+###
+
+# *** Create a new room ***
+POST http://localhost:8080/api/rooms/create
+Content-Type: application/json
+
+{
+  "ownerId": "7dd284d6-54d4-4fe8-8342-e1c2d6d47d5b",
+  "code": "RM-2026-ALPHA",
+  "roomName": "Conference Room Alpha",
+  "createdAt": "2026-04-01T10:00:00Z",
+  "createdUserId": "7dd284d6-54d4-4fe8-8342-e1c2d6d47d5b",
+  "updatedAt": "2026-04-01T10:00:00Z",
+  "updatedUserId": "7dd284d6-54d4-4fe8-8342-e1c2d6d47d5b",
+  "isDeleted": false
+}
+
+###
+
+
+# *** Update a room ***
+PUT http://localhost:8080/api/rooms/update
+Content-Type: application/json
+
+{
+  "id": "b2c3d4e5-f6a7-58b9-c0d1-2e3f4g5h6i7j",
+  "ownerId": "338787f7-640a-4b05-95a7-96944633b664",
+  "code": "DEV-LAB-01",
+  "roomName": "Engineering Sandbox (Updated)",
+  "createdAt": "2026-01-15T09:30:00Z",
+  "createdUserId": "338787f7-640a-4b05-95a7-96944633b664",
+  "updatedAt": "2026-03-25T14:45:00Z",
+  "updatedUserId": "ef266218-ef3f-47dd-98a3-7f2c406999a2",
+  "isDeleted": false
+}
+
+###
+
+# *** Delete a room ***
+DELETE http://localhost:8080/api/rooms/delete
+Content-Type: application/json
+
+{
+  "id": "c3d4e5f6-a7b8-69c0-d1e2-3f4g5h6i7j8k",
+  "ownerId": "ef266218-ef3f-47dd-98a3-7f2c406999a2",
+  "code": "TEMP-999",
+  "roomName": "Obsolete Testing Space",
+  "createdAt": "2025-12-01T12:00:00Z",
+  "createdUserId": "ef266218-ef3f-47dd-98a3-7f2c406999a2",
+  "updatedAt": "2025-12-05T08:00:00Z",
+  "updatedUserId": "ef266218-ef3f-47dd-98a3-7f2c406999a2",
+  "isDeleted": true
+}
