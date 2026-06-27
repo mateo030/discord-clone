@@ -1,13 +1,13 @@
 import type { Channel } from "../types/api";
 
-import { api } from "./configs/axiosConfigs";
+import { privateApi } from "./configs/axiosConfigs";
 import { defineCancelApiObject } from "./configs/axiosUtils";
 
 // TODO: Change return type to ApiResponse when implementing backend
 export const channelAPI = {
   get: async function (params: string, cancel = false): Promise<Channel[]> {
     try {
-      const response = await api.request<Channel[]>({
+      const response = await privateApi.request<Channel[]>({
         url: `/channels/?room_id=${params}`,
         method: "GET",
         signal: cancel
@@ -24,7 +24,7 @@ export const channelAPI = {
 
   getDm: async function (cancel = false): Promise<Channel[]> {
     try {
-      const response = await api.request<Channel[]>({
+      const response = await privateApi.request<Channel[]>({
         url: `/channels/?is_dm=true`,
         method: "GET",
         signal: cancel

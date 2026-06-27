@@ -12,7 +12,7 @@ export const useDashboardData = () => {
   const [selectedChannelId, setSelectedChannelId] = useState<string>("");
   const [selectedChannelName, setSelectedChannelName] = useState<string>("");
   const [messageList, setMessageList] = useState<Message[]>([]);
-  const [dmChannel, setDmChannelList] = useState<Channel[]>([]);
+  // const [dmChannel, setDmChannelList] = useState<Channel[]>([]);
 
   // 1. Fetch Rooms on mount
   useEffect(() => {
@@ -47,17 +47,17 @@ export const useDashboardData = () => {
   }, [selectedChannelId]);
 
   // 4. Fetch DM Channels (Only once or based on relevant updates)
-  useEffect(() => {
-    channelAPI.getDm().then((response) => {
-      setDmChannelList(response);
-    });
-  }, []); // Changed from selectedChannelId to avoid redundant calls
+  // useEffect(() => {
+  //   channelAPI.getDm().then((response) => {
+  //     setDmChannelList(response);
+  //   });
+  // }, []); // Changed from selectedChannelId to avoid redundant calls
 
   return {
     roomList,
     channelList,
     messageList,
-    dmChannel,
+    // dmChannel,
     selectedChannelName,
     setSelectedRoomId,
     setSelectedChannelId,

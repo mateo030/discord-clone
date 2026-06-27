@@ -1,6 +1,7 @@
-package com.discordclone.util;
+package com.discordclone.backend_service.util;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 import java.util.Date;
@@ -8,13 +9,21 @@ import java.util.Map;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
 public class JwtUtil {
     
-    private final String SECRET_KEY = "mysecretkey"; // TODO: In production, use a secure key and store it safely
-    private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hour
+    @Value("${security.jwt.secret-key}")
+    private String SECRET_KEY;
+
+    @Value("${security.jwt.expiration-time}")
+    private long EXPIRATION_TIME; // 1 hour
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String generateToken(String username, Map<String, Object> extraClaims) {

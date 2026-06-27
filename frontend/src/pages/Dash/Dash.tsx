@@ -15,6 +15,10 @@ export const Dash: React.FC = () => {
     roomName: "",
   });
 
+  const [roomJoinFormData, setRoomJoinFormData] = useState({
+    roomCode: "",
+  });
+
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -22,7 +26,7 @@ export const Dash: React.FC = () => {
     roomList,
     channelList,
     messageList,
-    dmChannel,
+    // dmChannel,
     selectedChannelName,
     setSelectedRoomId,
     setSelectedChannelId,
@@ -55,7 +59,7 @@ export const Dash: React.FC = () => {
 
   const handleCreateRoom = async () => {
     const params = {
-      ownerId: "test",
+      ownerId: "test", // TODO: Remove "test", replace with real user id
       roomName: createRoomFormData.roomName,
     };
 
@@ -68,15 +72,39 @@ export const Dash: React.FC = () => {
     }
   };
 
+  const handleRoomJoinFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setRoomJoinFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleRoomJoin = async () => {
+    const params = {
+      roomCode: roomJoinFormData.roomCode,
+    };
+    console.log("click");
+    try {
+      const joinResponse = await roomAPI.post(false, params);
+      console.log("Room joined: ", joinResponse);
+      // Optionally, you can refresh the room list or navigate to the new room
+    } catch (error) {
+      console.error("Error creating room: ", error);
+    }
+  };
+
   return (
     <div className="content">
       <SideBar
         roomList={roomList}
         channelList={channelList}
-        dmChannel={dmChannel}
+        // dmChannel={dmChannel}
         onRoomClick={handleRoomCLick}
         onChannelClick={handleChannelClick}
         handleLogout={handleLogout}
+        onRoomJoin={handleRoomJoin}
+        onRoomJoinFormChange={handleRoomJoinFormChange}
         onCreateRoom={handleCreateRoom}
         onCreateRoomFormChange={handleCreateRoomFormChange}
       />

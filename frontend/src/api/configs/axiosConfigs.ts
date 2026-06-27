@@ -1,8 +1,13 @@
 import axios, { AxiosError } from "axios";
 
-export const api = axios.create({
+export const publicApi = axios.create({
   withCredentials: false,
   baseURL: "/api", // TODO: Switch with actual API domain
+});
+
+export const privateApi = axios.create({
+  withCredentials: true,
+  baseURL: "/api",
 });
 
 /**
@@ -20,6 +25,10 @@ const errorHandler = (error: AxiosError) => {
   return Promise.reject(error);
 };
 
-api.interceptors.response.use(undefined, (error) => {
+publicApi.interceptors.response.use(undefined, (error) => {
+  return errorHandler(error);
+});
+
+privateApi.interceptors.response.use(undefined, (error) => {
   return errorHandler(error);
 });

@@ -1,13 +1,13 @@
 import type { Message } from "../types/api";
 
-import { api } from "./configs/axiosConfigs";
+import { privateApi } from "./configs/axiosConfigs";
 import { defineCancelApiObject } from "./configs/axiosUtils";
 
 // TODO: Change return type to ApiResponse when implementing backend
 export const messageAPI = {
   get: async function (params: string, cancel = false): Promise<Message[]> {
     try {
-      const response = await api.request<Message[]>({
+      const response = await privateApi.request<Message[]>({
         url: `/messages/?channel_id=${params}`,
         method: "GET",
         signal: cancel

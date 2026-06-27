@@ -16,6 +16,17 @@ export interface Room {
   delete_flag: boolean;
 }
 
+export interface RoomMember {
+  id: string;
+  user_id: string;
+  room_id: string;
+  created_at: string;
+  created_user: string;
+  updated_at: string;
+  updated_user: string;
+  delete_flag: boolean;
+}
+
 export interface Channel {
   id: string;
   room_id: string;
@@ -43,13 +54,10 @@ export interface Message {
 
 export interface User {
   id: string;
+  username: string;
+}
+
+export interface LoginResponse {
+  user: User;
   role: string;
-  user_email: string;
-  user_first_name: string;
-  user_last_name: string;
-  created_at: string;
-  created_user: string;
-  updated_at: string;
-  updated_user: string;
-  delete_flag: boolean;
 }

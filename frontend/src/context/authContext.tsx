@@ -1,44 +1,88 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
+import { authApi } from "@/api/authApi";
+import type { User } from "@/types/api";
+
 type AuthContextType = {
   isAuthenticated: boolean;
-  token: string | null;
-  login: (token: string) => void;
+  login: (user: User, role: string) => void;
   logout: () => void;
-  getToken: () => string | null;
+  getUser: () => User | null;
+  isLoading: boolean;
 };
+
+interface AuthState {
+  user: User | null;
+  roles: string;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token"),
-  );
+  const [authState, setAuthState] = useState<AuthState>({
+    user: null,
+    roles: "",
+    isAuthenticated: false,
+    isLoading: true,
+  });
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-    }
+    const checkCurrentUser = async () => {
+      try {
+        console.log("Checking current user authorization...");
+        const currentUserResponse = await authApi.currentUser(false);
+        console.log(currentUserResponse);
+
+        if (!currentUserResponse) {
+          console.log("Current user session does not exist");
+          return;
+        }
+
+        console.log("Current user: " + currentUserResponse);
+
+        setAuthState({
+          user: currentUserResponse,
+          roles: "USER",
+          isAuthenticated: true,
+          isLoading: false,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    checkCurrentUser();
   }, []);
 
-  const login = (newToken: string) => {
-    localStorage.setItem("token", newToken);
-    setToken(newToken);
+  const login = (user: User, role: string) => {
+    setAuthState({
+      user: user,
+      roles: role,
+      isAuthenticated: true,
+      isLoading: false,
+    });
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
+    const logoutResponse = authApi.logout(false);
+    console.log(logoutResponse);
+    console.log("Logout Successful");
   };
 
-  const getToken = () => token;
+  const getUser = () => authState.user;
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated: !!token, token, login, logout, getToken }}
+      value={{
+        isAuthenticated: !!authState.user,
+        login,
+        logout,
+        getUser,
+        isLoading: authState.isLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>

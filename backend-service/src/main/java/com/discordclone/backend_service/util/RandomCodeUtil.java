@@ -1,4 +1,4 @@
-package com.discordclone.util;
+package com.discordclone.backend_service.util;
 
 import java.security.SecureRandom;
 

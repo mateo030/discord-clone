@@ -1,22 +1,22 @@
-import type { User } from "../types/api";
+import type { User, LoginResponse } from "../types/api";
 
-import { api } from "./configs/axiosConfigs";
+import { publicApi, privateApi } from "./configs/axiosConfigs";
 import { defineCancelApiObject } from "./configs/axiosUtils";
 
-// TODO: Change return type to ApiResponse when implementing backend
 export const authApi = {
-  login: async function (cancel = false, params: any): Promise<User[]> {
+  login: async function (cancel = false, params: any): Promise<LoginResponse> {
     try {
       console.log(params);
-      const response = await api.request<User[]>({
-        url: `/auth/login`,
+      const response = await publicApi.request<LoginResponse>({
+        url: `/auth/signin`,
         method: "POST",
         data: params,
         signal: cancel
           ? cancelApiObject[this.login.name].handleRequestCancellation().signal
           : undefined,
+        headers: { "Content-Type": "application/json" },
       });
-      console.log(response.data);
+
       return response.data;
     } catch (error: any) {
       console.error(error.message);
@@ -27,7 +27,7 @@ export const authApi = {
   signup: async function (cancel = false, params: any): Promise<User[]> {
     try {
       console.log(params);
-      const response = await api.request<User[]>({
+      const response = await publicApi.request<User[]>({
         url: `/auth/signup`,
         method: "POST",
         data: params,
@@ -45,13 +45,47 @@ export const authApi = {
   verify: async function (cancel = false, params: any): Promise<User[]> {
     try {
       console.log(params);
-      const response = await api.request<User[]>({
+      const response = await publicApi.request<User[]>({
         url: `/auth/verify`,
         method: "POST",
         data: params,
         signal: cancel
           ? cancelApiObject[this.login.name].handleRequestCancellation().signal
           : undefined,
+      });
+      return response.data;
+    } catch (error: any) {
+      console.error(error.message);
+      throw error;
+    }
+  },
+
+  logout: async function (cancel = false): Promise<LoginResponse> {
+    try {
+      const response = await publicApi.request<LoginResponse>({
+        url: `/auth/logout`,
+        method: "POST",
+        signal: cancel
+          ? cancelApiObject[this.login.name].handleRequestCancellation().signal
+          : undefined,
+        headers: { "Content-Type": "application/json" },
+      });
+      return response.data;
+    } catch (error: any) {
+      console.error(error.message);
+      throw error;
+    }
+  },
+
+  currentUser: async function (cancel = false): Promise<User> {
+    try {
+      const response = await privateApi.request<User>({
+        url: `/auth/current-user`,
+        method: "GET",
+        signal: cancel
+          ? cancelApiObject[this.login.name].handleRequestCancellation().signal
+          : undefined,
+        headers: { "Content-Type": "application/json" },
       });
       return response.data;
     } catch (error: any) {

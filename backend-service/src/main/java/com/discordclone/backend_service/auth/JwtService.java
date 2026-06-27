@@ -3,6 +3,7 @@ package com.discordclone.backend_service.auth;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 import javax.crypto.SecretKey;
@@ -22,13 +23,18 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
     
     @Value("${security.jwt.secret-key}")
-    private String secretKey;
+    private String SECRET_KEY;
 
     @Value("${security.jwt.expiration-time}")
-    private long jwtExpiration;
+    private long EXPIRATION_TIME;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public UUID extractUserId(String token) {
+        String subject = extractClaim(token, Claims::getSubject);
+        return UUID.fromString(subject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -41,28 +47,29 @@ public class JwtService {
     }
 
     public String generateToken(Map<String,Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
+        return buildToken(extraClaims, userDetails, EXPIRATION_TIME);
     }
 
     public long getExpirationTime() {
-        return jwtExpiration;
+        return EXPIRATION_TIME;
     }
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
         User user = (User) userDetails;
         return Jwts.builder()
             .claims(extraClaims)
-            .subject(user.getEmail()) // Converts UUID to String for JWT
+            .subject(user.getId().toString()) 
             .issuedAt(new Date(System.currentTimeMillis()))
             .expiration(new Date(System.currentTimeMillis() + expiration))
+            .id(UUID.randomUUID().toString())
             .signWith(getSignInKey())
             .compact();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
+        final UUID userId = extractUserId(token);
         User user = (User) userDetails;
-        return (username.equals(user.getEmail()) && !isTokenExpired(token));
+        return (userId.equals(user.getId()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
@@ -83,7 +90,7 @@ public class JwtService {
     }
 
     private SecretKey getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

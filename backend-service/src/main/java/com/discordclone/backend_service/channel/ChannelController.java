@@ -6,7 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -19,15 +22,15 @@ public class ChannelController {
     public ChannelController(ChannelService channelService) {
         this.channelService = channelService;
     }
-    // TODO: Uncomment this later
-    // @PostMapping
-    // public ResponseEntity<ChannelResponseDto> createChannel(@RequestBody ChannelRequestDto channel) {
-    //     return channelService.createChannel(channel);
-    // }
 
-    @GetMapping()
-    public List<Channel> getChannels(@RequestParam UUID userId) {
-        return channelService.getChannels(userId);
+    @PostMapping
+    public ResponseEntity<ChannelResponseDto> createChannel(@RequestBody ChannelRequestDto req) {
+        return ResponseEntity.ok(channelService.createChannel(req));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ChannelResponseDto>> getChannels(@RequestParam UUID roomId) {
+        return ResponseEntity.ok(channelService.getChannels(roomId));
     }
     
 }

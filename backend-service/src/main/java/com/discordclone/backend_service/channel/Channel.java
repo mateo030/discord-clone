@@ -1,24 +1,28 @@
 package com.discordclone.backend_service.channel;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
-import com.discordclone.backend_service.channelmember.ChannelMember;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import jakarta.persistence.CascadeType;
+import com.discordclone.backend_service.room.Room;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "channels")
 public class Channel {
     
@@ -26,40 +30,30 @@ public class Channel {
     @GeneratedValue(strategy = GenerationType.UUID) 
     private UUID id;
 
-    @Column(name = "room_id")
-    @NotNull
-    private UUID roomId;
-
     @Column(name = "channel_name")
-    @NotBlank
     private String channelName;
 
     @Column(name = "is_dm")
-    @NotNull
     private boolean isDm;
 
-    @Column(name="created_at")
-    @NotNull
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column(name="created_user_id")
-    @NotNull
+    @CreatedBy
     private UUID createdUserId;
 
-    @Column(name="updated_at")
-    @NotNull
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @Column(name="updated_user_id")
-    @NotNull
+    @LastModifiedBy
     private UUID updatedUserId;
 
-    @Column(name="is_deleted")
-    @NotNull
+    @Column(nullable = false)
     private boolean isDeleted;
 
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-    private List<ChannelMember> channelMembers;
+    @ManyToOne
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
 
     public UUID getId() {
         return id;
@@ -67,14 +61,6 @@ public class Channel {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public UUID getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(UUID roomId) {
-        this.roomId = roomId;
     }
 
     public String getChannelName() {
@@ -131,5 +117,13 @@ public class Channel {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 }

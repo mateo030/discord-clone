@@ -6,10 +6,12 @@ import type { Channel, Room } from "@/types/api";
 type SideBarProps = {
   roomList: Room[];
   channelList: Channel[];
-  dmChannel: Channel[];
+  // dmChannel: Channel[];
   onRoomClick(roomId: string): void;
   onChannelClick(channelId: string, channelName: string): void;
   handleLogout(): void;
+  onRoomJoin(): void;
+  onRoomJoinFormChange(e: React.ChangeEvent<HTMLInputElement>): void;
   onCreateRoom(): void;
   onCreateRoomFormChange(e: React.ChangeEvent<HTMLInputElement>): void;
 };
@@ -17,10 +19,12 @@ type SideBarProps = {
 export const SideBar: React.FC<SideBarProps> = ({
   roomList,
   channelList,
-  dmChannel,
+  // dmChannel,
   onRoomClick,
   onChannelClick,
   handleLogout,
+  onRoomJoin,
+  onRoomJoinFormChange,
   onCreateRoom,
   onCreateRoomFormChange,
 }) => {
@@ -74,7 +78,7 @@ export const SideBar: React.FC<SideBarProps> = ({
       <div className="sidebar-group">
         <h3>Direct Messages</h3>
         <ul>
-          {dmChannel.map((channel, index) => (
+          {/* {dmChannel.map((channel, index) => (
             <li
               role="button"
               key={index}
@@ -82,7 +86,7 @@ export const SideBar: React.FC<SideBarProps> = ({
             >
               {channel.channel_name}
             </li>
-          ))}
+          ))} */}
         </ul>
       </div>
       <div className="sidebar-card">
@@ -109,8 +113,14 @@ export const SideBar: React.FC<SideBarProps> = ({
         </div>
         <h2>Have an invite already?</h2>
         <div className="input-group">
-          <input type="text" id="roomCode" placeholder="Code" required />
-          <button>Join room</button>
+          <input
+            type="text"
+            id="roomCode"
+            placeholder="Code"
+            onChange={onRoomJoinFormChange}
+            required
+          />
+          <button onClick={onRoomJoin}>Join room</button>
         </div>
       </Modal>
       <Modal
@@ -129,8 +139,14 @@ export const SideBar: React.FC<SideBarProps> = ({
         </div>
         <h2>Have an invite already?</h2>
         <div className="input-group">
-          <input type="text" id="roomCode" placeholder="Code" required />
-          <button>Join room</button>
+          <input
+            type="text"
+            id="roomCode"
+            placeholder="Code"
+            onChange={onRoomJoinFormChange}
+            required
+          />
+          <button onClick={onRoomJoin}>Join room</button>
         </div>
       </Modal>
     </div>

@@ -1,9 +1,10 @@
 package com.discordclone.backend_service.channel;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.NotNull;
 
 public record ChannelRequestDto(
-    @NotNull String roomId,
-    @NotNull String channelName,
-    @NotNull boolean isDm
+    @NotNull UUID roomId,
+    @NotNull String channelName
 ) {}

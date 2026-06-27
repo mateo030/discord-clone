@@ -65,20 +65,14 @@ export const Auth: React.FC = () => {
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    // const params = new URLSearchParams();
-    // console.log(loginData);
-    // params.append("email", loginData.email);
-    // params.append("password", loginData.password);
-    // const userData = await authApi.login(false, params);
-    // if (userData) {
-    //   login("dummyToken");
-    //   navigate("/dash");
-    // } else {
-    //   console.error("Login failed");
-    // }
-
-    login("dummyToken");
-    navigate("/dash");
+    const payload = { email: loginData.email, password: loginData.password };
+    const res = await authApi.login(false, payload);
+    if (res) {
+      login(res.user, res.role);
+      navigate("/dash");
+    } else {
+      console.error("Login failed");
+    }
   };
 
   const handleRegisterFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {

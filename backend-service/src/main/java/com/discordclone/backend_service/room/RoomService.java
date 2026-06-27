@@ -5,13 +5,13 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.discordclone.backend_service.exception.ResourceNotFoundException;
 import com.discordclone.backend_service.roommember.RoomMember;
 import com.discordclone.backend_service.roommember.RoomMemberRepository;
 import com.discordclone.backend_service.user.User;
 import com.discordclone.backend_service.user.UserRepository;
-import com.discordclone.util.RandomCodeUtil;
+import com.discordclone.backend_service.util.RandomCodeUtil;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -30,7 +30,7 @@ public class RoomService {
     @Transactional
     public RoomResponseDto createRoom(RoomRequestDto request) {
         User roomOwner = userRepository.findById(request.ownerId())
-            .orElseThrow(() -> new EntityNotFoundException("Room owner ID not found."));
+            .orElseThrow(() -> new ResourceNotFoundException("Room not found."));
         Room room = new Room();
         String randomCode = RandomCodeUtil.generateRandomCode(6);
         room.setCode(randomCode);
@@ -53,6 +53,7 @@ public class RoomService {
         );
     }
 
+    // TODO: Change to Response DTO
     public List<Room> getRoomsByUserId(UUID userId) {
         return roomRepository.findByUserId(userId);
     }

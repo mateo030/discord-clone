@@ -3,6 +3,7 @@ package com.discordclone.backend_service.auth;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -114,6 +115,13 @@ public class AuthService {
         } catch (MessagingException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public User checkUserById(UUID userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found!"));
+
+        return user;
     }
 
     private String generateVerificationCode() {
