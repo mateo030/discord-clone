@@ -44,7 +44,6 @@ public class AuthService {
     @Transactional
     public User register(SignupRequest request) {
         User user = new User(request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getRole());
-        System.out.println("USER ADDRESS: " + request.getEmail());
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationExpiresDatetime(LocalDateTime.now().plusMinutes(15));
         user.setEnabled(false);

@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.discordclone.backend_service.room.Room;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -109,6 +110,7 @@ public class RoomMember {
         this.isDeleted = isDeleted;
     }
 
+    @JsonIgnore
     public Room getRoom() {
         return this.room;
     }

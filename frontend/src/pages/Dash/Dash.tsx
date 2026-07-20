@@ -6,7 +6,7 @@ import { SideBar } from "../../components/SideBar";
 import { useAuth } from "../../context/authContext";
 
 import { roomAPI } from "@/api/roomAPI";
-import { useDashboardData } from "@/hooks/useInitialize";
+import { useInitialize } from "@/hooks/useInitialize";
 
 import "./style.css";
 
@@ -23,15 +23,15 @@ export const Dash: React.FC = () => {
   const navigate = useNavigate();
 
   const {
-    roomList,
-    channelList,
-    messageList,
-    // dmChannel,
+    initData,
     selectedChannelName,
+    isLoading,
     setSelectedRoomId,
     setSelectedChannelId,
     setSelectedChannelName,
-  } = useDashboardData();
+  } = useInitialize();
+
+  console.log("Init data: ", initData);
 
   const handleRoomCLick = (roomId: string) => {
     setSelectedRoomId(roomId);
@@ -94,24 +94,30 @@ export const Dash: React.FC = () => {
     }
   };
 
-  return (
-    <div className="content">
-      <SideBar
-        roomList={roomList}
-        channelList={channelList}
-        // dmChannel={dmChannel}
-        onRoomClick={handleRoomCLick}
-        onChannelClick={handleChannelClick}
-        handleLogout={handleLogout}
-        onRoomJoin={handleRoomJoin}
-        onRoomJoinFormChange={handleRoomJoinFormChange}
-        onCreateRoom={handleCreateRoom}
-        onCreateRoomFormChange={handleCreateRoomFormChange}
-      />
-      <Chatroom
-        selectedChannelName={selectedChannelName}
-        messageList={messageList}
-      />
-    </div>
-  );
+  console.log(initData);
+
+  if (isLoading) {
+    return <h1>Data loading</h1>;
+  } else {
+    return (
+      <div className="content">
+        <SideBar
+          roomList={initData.room}
+          channelList={initData.channel}
+          // dmChannel={dmChannel}
+          onRoomClick={handleRoomCLick}
+          onChannelClick={handleChannelClick}
+          handleLogout={handleLogout}
+          onRoomJoin={handleRoomJoin}
+          onRoomJoinFormChange={handleRoomJoinFormChange}
+          onCreateRoom={handleCreateRoom}
+          onCreateRoomFormChange={handleCreateRoomFormChange}
+        />
+        <Chatroom
+          selectedChannelName={selectedChannelName}
+          messageList={initData.message}
+        />
+      </div>
+    );
+  }
 };

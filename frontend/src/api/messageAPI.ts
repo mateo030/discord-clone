@@ -8,7 +8,7 @@ export const messageAPI = {
   get: async function (params: string, cancel = false): Promise<Message[]> {
     try {
       const response = await privateApi.request<Message[]>({
-        url: `/messages/?channel_id=${params}`,
+        url: `/messages/?channelId=${params}`,
         method: "GET",
         signal: cancel
           ? cancelApiObject[this.get.name].handleRequestCancellation().signal

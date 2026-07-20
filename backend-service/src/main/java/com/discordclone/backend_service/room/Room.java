@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.discordclone.backend_service.roommember.RoomMember;
 import com.discordclone.backend_service.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -134,6 +135,7 @@ public class Room {
         this.owner = owner;
     }
 
+    @JsonIgnore
     public List<RoomMember> getMembers() {
         return members;
     }

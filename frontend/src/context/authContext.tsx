@@ -4,10 +4,10 @@ import { authApi } from "@/api/authApi";
 import type { User } from "@/types/api";
 
 type AuthContextType = {
+  user: User | null;
   isAuthenticated: boolean;
   login: (user: User, role: string) => void;
   logout: () => void;
-  getUser: () => User | null;
   isLoading: boolean;
 };
 
@@ -50,6 +50,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           isAuthenticated: true,
           isLoading: false,
         });
+
+        return;
       } catch (error) {
         console.log(error);
       }
@@ -72,15 +74,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     console.log("Logout Successful");
   };
 
-  const getUser = () => authState.user;
-
   return (
     <AuthContext.Provider
       value={{
+        user: authState.user,
         isAuthenticated: !!authState.user,
         login,
         logout,
-        getUser,
         isLoading: authState.isLoading,
       }}
     >

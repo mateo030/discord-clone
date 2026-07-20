@@ -1,64 +1,73 @@
 import { useState, useEffect } from "react";
 
 import { channelAPI } from "@/api/channelAPI";
-import { messageAPI } from "@/api/messageAPI";
+// import { messageAPI } from "@/api/messageAPI";
 import { roomAPI } from "@/api/roomAPI";
-import type { Room, Channel, Message } from "@/types/api";
+import { useAuth } from "@/context/authContext";
+import type { InitData } from "@/types/api";
 
-export const useDashboardData = () => {
-  const [roomList, setRoomList] = useState<Room[]>([]);
+export const useInitialize = () => {
+  const [initData, setInitData] = useState<InitData>({
+    room: [],
+    channel: [],
+  });
   const [selectedRoomId, setSelectedRoomId] = useState<string>("");
-  const [channelList, setChannelList] = useState<Channel[]>([]);
   const [selectedChannelId, setSelectedChannelId] = useState<string>("");
   const [selectedChannelName, setSelectedChannelName] = useState<string>("");
-  const [messageList, setMessageList] = useState<Message[]>([]);
   // const [dmChannel, setDmChannelList] = useState<Channel[]>([]);
 
-  // 1. Fetch Rooms on mount
+  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    roomAPI.get().then((response) => {
-      if (response.length > 0) {
-        setRoomList(response);
-        setSelectedRoomId(response[0].id);
+    let ignore = false;
+
+    async function fetchDashboardData() {
+      if (!user) return;
+      setIsLoading(true);
+      console.log("user: ", user);
+      console.log("useInit userId: ", user.id);
+      try {
+        const roomResponse = await roomAPI.get(false, user.id);
+        if (!roomResponse) throw new Error("Failed to fetch room");
+        const roomData = roomResponse;
+        setSelectedRoomId(roomData[0].id);
+        console.log(roomData[0].id);
+
+        const channelResponse = await channelAPI.get(roomData[0].id);
+        if (!channelResponse) throw new Error("Failed to fetch channel");
+        const channelData = channelResponse;
+        setSelectedChannelId(channelData[0].id);
+
+        // const messageResponse = await messageAPI.get(channelData[0].id);
+        // if (!messageResponse) throw new Error("Failed to fetch messages");
+        // const messageData = messageResponse;
+
+        if (!ignore) {
+          setInitData({
+            room: roomData,
+            channel: channelData,
+          });
+        }
+      } catch (error) {
+        if (!ignore) {
+          console.error(error);
+        }
+      } finally {
+        if (!ignore) setIsLoading(false);
       }
-    });
-  }, []);
-
-  // 2. Fetch Channels when room changes
-  useEffect(() => {
-    if (!selectedRoomId) return;
-
-    channelAPI.get(selectedRoomId).then((response) => {
-      setChannelList(response);
-      if (response.length > 0) {
-        setSelectedChannelId(response[0].id);
-        setSelectedChannelName(response[0].channel_name);
-      }
-    });
-  }, [selectedRoomId]);
-
-  // 3. Fetch Messages when channel changes
-  useEffect(() => {
-    if (!selectedChannelId) return;
-
-    messageAPI.get(selectedChannelId).then((response) => {
-      setMessageList(response);
-    });
-  }, [selectedChannelId]);
-
-  // 4. Fetch DM Channels (Only once or based on relevant updates)
-  // useEffect(() => {
-  //   channelAPI.getDm().then((response) => {
-  //     setDmChannelList(response);
-  //   });
-  // }, []); // Changed from selectedChannelId to avoid redundant calls
+    }
+    fetchDashboardData();
+    return () => {
+      ignore = true;
+    };
+  }, [user]);
 
   return {
-    roomList,
-    channelList,
-    messageList,
+    initData,
     // dmChannel,
     selectedChannelName,
+    isLoading,
     setSelectedRoomId,
     setSelectedChannelId,
     setSelectedChannelName,

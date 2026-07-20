@@ -5,10 +5,10 @@ import { defineCancelApiObject } from "./configs/axiosUtils";
 
 // TODO: Change return type to ApiResponse when implementing backend
 export const roomAPI = {
-  get: async function (cancel = false): Promise<Room[]> {
+  get: async function (cancel = false, userId: string): Promise<Room[]> {
     try {
       const response = await privateApi.request<Room[]>({
-        url: "/rooms",
+        url: `/rooms?userId=${userId}`,
         method: "GET",
         signal: cancel
           ? cancelApiObject[this.get.name].handleRequestCancellation().signal

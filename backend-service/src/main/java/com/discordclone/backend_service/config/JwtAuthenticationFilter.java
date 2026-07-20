@@ -48,10 +48,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         }
 
         try {
-            System.out.println("JWT Token: " + token);
             final String jwt = token;
             final UUID userId = jwtService.extractUserId(jwt);
-            System.out.println("This is the userId: " + userId);
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

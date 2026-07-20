@@ -13,6 +13,8 @@ import jakarta.validation.Valid;
 import java.util.Map;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,8 @@ public class AuthController {
 
     private final JwtUtil jwtUtil;
 
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+
     public AuthController(JwtService jwtService, AuthService authService, JwtUtil jwtUtil) {
         this.jwtService = jwtService;
         this.authService = authService;
@@ -41,21 +45,20 @@ public class AuthController {
     // TODO: Return error message to user after failed register
     @PostMapping("/signup")
     public ResponseEntity<User> register(@Valid @RequestBody SignupRequest request) {
+        log.info("Received register request with the email: {}", request.getEmail());
         User registeredUser = authService.register(request);
         return ResponseEntity.ok(registeredUser);
     }
     
     @PostMapping("/signin")
     public ResponseEntity<SigninResponse> authenticate(@RequestBody SigninRequest request) {
-        System.out.println("Logging in with credentials: ");
-        System.out.println("Email: " + request.getEmail());
-        System.out.println("Password: " + request.getPassword());
+        log.info("Received login request with the email: {}", request.getEmail());
         User authenticatedUser = authService.authenticate(request);
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
         // Construct cookie with jwt token
         ResponseCookie cookie = ResponseCookie.from("token", jwtToken)
-            .httpOnly(true)
+            .httpOnly(false)
             .secure(true)
             .path("/")
             .maxAge(15*60)
@@ -65,6 +68,8 @@ public class AuthController {
         // Prepare user data
         UserDto userDto = new UserDto(authenticatedUser.getId(), authenticatedUser.getUsername());
         SigninResponse signinResponse = new SigninResponse(userDto, authenticatedUser.getRole());
+
+        log.info("Login successful for user with email: {}", request.getEmail());
 
         // Return cookie + user data
         return ResponseEntity.ok()
@@ -95,16 +100,12 @@ public class AuthController {
     // Gets called when the user refreshes
     @GetMapping("/current-user")
     public ResponseEntity<?> verifyUserCookie(@CookieValue(name="token",required=false) String jwt) {
-        System.out.println("Cookie JWT Content: " + jwt);
-
         if (jwt == null || !jwtUtil.validateToken(jwt)) {
-            System.out.println("--- Token not valid ---");
             return ResponseEntity.status(401).build();
         }
 
         UUID userId = jwtService.extractUserId(jwt);
         User user = authService.checkUserById(userId);
-        //
 
         return ResponseEntity.ok(Map.of(
                                         "userId", user.getId(),
@@ -113,9 +114,9 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
-        System.out.println("Logging out...");
+        log.info("Logging out...");
         ResponseCookie cookie = ResponseCookie.from("token", "")
-            .httpOnly(true)
+            .httpOnly(false)
             .secure(true)
             .path("/")
             .maxAge(0)

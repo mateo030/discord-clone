@@ -24,7 +24,7 @@ export const Chatroom: React.FC<ChatroomProps> = ({
         <h1># {selectedChannelName}</h1>
       </div>
       <div className="chatroom-body">
-        {messageList.map((message, index) => (
+        {/* {messageList.map((message, index) => (
           <div key={index} className="message">
             <div className="message-name">
               <h4>
@@ -39,7 +39,7 @@ export const Chatroom: React.FC<ChatroomProps> = ({
             </div>
             <p>{message.content}</p>
           </div>
-        ))}
+        ))} */}
       </div>
       <div className="chatroom-composer">
         <textarea

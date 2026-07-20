@@ -7,9 +7,8 @@ import { defineCancelApiObject } from "./configs/axiosUtils";
 export const channelAPI = {
   get: async function (params: string, cancel = false): Promise<Channel[]> {
     try {
-      const response = await privateApi.request<Channel[]>({
-        url: `/channels/?room_id=${params}`,
-        method: "GET",
+      const response = await privateApi.get<Channel[]>("/channels", {
+        params: { roomId: params },
         signal: cancel
           ? cancelApiObject[this.get.name].handleRequestCancellation().signal
           : undefined,
@@ -24,9 +23,8 @@ export const channelAPI = {
 
   getDm: async function (cancel = false): Promise<Channel[]> {
     try {
-      const response = await privateApi.request<Channel[]>({
-        url: `/channels/?is_dm=true`,
-        method: "GET",
+      const response = await privateApi.get<Channel[]>("/channels", {
+        params: { is_dm: true },
         signal: cancel
           ? cancelApiObject[this.get.name].handleRequestCancellation().signal
           : undefined,

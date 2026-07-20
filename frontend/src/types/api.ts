@@ -4,6 +4,12 @@ export interface ApiResponse<T> {
   message: string;
 }
 
+export interface InitData {
+  room: Room[];
+  channel: Channel[];
+  // message: Message[];
+}
+
 export interface Room {
   id: string;
   owner_id: string;
