@@ -33,10 +33,6 @@ export const SideBar: React.FC<SideBarProps> = ({
 
   return (
     <div className="sidebar">
-      <div className="sidebar-header">
-        <h1>Slack Clone</h1>
-        <h2>←</h2>
-      </div>
       <div className="sidebar-group">
         <div className="sidebar-group-header">
           <h3>My Rooms</h3>

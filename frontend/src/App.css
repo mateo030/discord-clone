@@ -1,26 +1,24 @@
 * {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-	font-family: var(--font-family);
-	background-color: var(--bg-app);
-	color: var(--text-main);
-	height: 100vh;
-	overflow: hidden; /* Prevents whole-page scrolling */
+  font-family: var(--font-family);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  height: 100vh;
+  overflow: hidden; /* Prevents whole-page scrolling */
 }
 
-h1,
-h2,
-h3,
-h4 {
-	color: var(--text-heading);
-	font-weight: 600;
+h1 {
+  color: var(--text-heading);
+  font-weight: 600;
+  font-family: "Bowlby One";
 }
 
 a {
-	color: var(--accent-blue);
-	text-decoration: none;
+  color: var(--accent-blue);
+  text-decoration: none;
 }

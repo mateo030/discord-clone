@@ -1,10 +1,19 @@
-.container {
-  padding: 40px 20px;
+.logo-container {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 64px;
+}
+
+.subtitle {
+  font-size: 24px;
 }
 
 form {
   display: grid;
-  gap: 1rem;
+  gap: 16px;
   max-width: 30rem;
   margin: 0 auto;
 }
@@ -29,10 +38,9 @@ textarea {
 
 input,
 textarea {
-  background-color: #22262b;
   border: none;
   padding: 5px 5px;
-  color: #ffffff;
+  border: 1px solid #d1d5db;
 }
 
 textarea {
@@ -44,10 +52,10 @@ label {
 }
 
 button {
-  background-color: rgb(148, 0, 206);
-  color: var(--text-heading);
+  background-color: var(--accent-blue);
+  color: var(--text-white);
   border: none;
-  padding: 5px 0px;
+  padding: 10px 10px;
 }
 
 button:hover {

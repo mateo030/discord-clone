@@ -47,30 +47,7 @@ export const Chatroom: React.FC<ChatroomProps> = ({
           placeholder="Message #General..."
         ></textarea>
         <div className="composer-toolbar">
-          <div className="toolbar-left">
-            <button className="tool-btn">
-              <b>B</b>
-            </button>
-            <button className="tool-btn">
-              <i>I</i>
-            </button>
-            <button className="tool-btn">
-              <s>S</s>
-            </button>
-            <button className="tool-btn">
-              <i className="fas fa-code"></i>
-            </button>
-          </div>
-
-          <div className="toolbar-right">
-            <button className="tool-btn">
-              <i className="fas fa-paperclip"></i>
-            </button>
-            <button className="tool-btn">
-              <i className="far fa-smile"></i>
-            </button>
-            <button className="btn-send">Send</button>
-          </div>
+          <button className="btn-send">Send</button>
         </div>
       </div>
       <Modal

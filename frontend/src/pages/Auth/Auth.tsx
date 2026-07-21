@@ -134,5 +134,14 @@ export const Auth: React.FC = () => {
     }
   };
 
-  return <div className="container">{displayForms(formMode)}</div>;
+  return (
+    <>
+      <div className="logo-container">
+        <h1 className="logo">Whisper</h1>
+        <p className="subtitle">A light-weight chat system</p>
+      </div>
+
+      {displayForms(formMode)}
+    </>
+  );
 };

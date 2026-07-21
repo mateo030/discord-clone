@@ -13,8 +13,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   return (
     <form>
-      <h1>Welcome to SlackClone!</h1>
-      <h2>Communicate easily with your friends</h2>
       <div className="form-group">
         <label htmlFor="email">Email</label>
         <input type="email" id="email" onChange={onFormChange} required />

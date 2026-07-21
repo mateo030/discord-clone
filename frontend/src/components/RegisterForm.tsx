@@ -13,8 +13,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 }) => {
   return (
     <form>
-      <h1>Welcome to SlackClone!</h1>
-      <h2>Create an account now</h2>
       <div className="form-group">
         <label htmlFor="username">Username</label>
         <input type="text" id="username" onChange={onFormChange} required />
