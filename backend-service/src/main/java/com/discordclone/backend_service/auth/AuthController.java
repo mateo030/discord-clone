@@ -108,7 +108,7 @@ public class AuthController {
         User user = authService.checkUserById(userId);
 
         return ResponseEntity.ok(Map.of(
-                                        "userId", user.getId(),
+                                        "id", user.getId(),
                                         "username", user.getUsername()));
     }
 

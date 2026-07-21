@@ -26,7 +26,7 @@ export const useInitialize = () => {
       if (!user) return;
       setIsLoading(true);
       console.log("user: ", user);
-      console.log("useInit userId: ", user.id);
+      console.log("useInit userId: ", user.userId);
       try {
         const roomResponse = await roomAPI.get(false, user.id);
         if (!roomResponse) throw new Error("Failed to fetch room");
