@@ -77,6 +77,11 @@ export const RegisterForm: React.FC<RegistrationFormProps> = ({
           id="password"
           {...register("password", {
             required: "Password is required",
+            pattern: {
+              value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+              message:
+                "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+            },
           })}
         />
         {errors.password && <p>{errors.password.message}</p>}
