@@ -8,11 +8,11 @@ import jakarta.validation.constraints.Size;
 
 public record RoomRequestDto(
 
-    @NotNull(message = "Owner id must not be null.")
-    UUID ownerId,
+    @NotNull(message = "ID must not be null.")
+    UUID id,
 
     @NotBlank(message = "Room name must not be null.")
-    @Size(max = 6, message = "Room name must be above 6 characters.")
+    @Size(min = 6, message = "Room name must be above 6 characters.")
     String roomName
 
 ) {}

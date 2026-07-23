@@ -29,8 +29,9 @@ public class RoomService {
 
     @Transactional
     public RoomResponseDto createRoom(RoomRequestDto request) {
-        User roomOwner = userRepository.findById(request.ownerId())
-            .orElseThrow(() -> new ResourceNotFoundException("Room not found."));
+        User roomOwner = userRepository.findById(request.id())
+            .orElseThrow(() -> new ResourceNotFoundException("User does not exist."));
+
         Room room = new Room();
         String randomCode = RandomCodeUtil.generateRandomCode(6);
         room.setCode(randomCode);
@@ -39,7 +40,7 @@ public class RoomService {
         Room savedRoom = roomRepository.save(room);
 
         RoomMember roomMember = new RoomMember();
-        roomMember.setUserId(request.ownerId());
+        roomMember.setUserId(request.id());
         roomMember.setRoom(savedRoom);
         this.roomMemberRepository.save(roomMember);
 

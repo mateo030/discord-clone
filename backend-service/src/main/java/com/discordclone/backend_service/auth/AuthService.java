@@ -69,23 +69,18 @@ public class AuthService {
     }
 
     public void verifyUser(VerifyUserRequest request) {
-        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
-        System.out.println(request.getVerificationCode());
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            if (user.getVerificationExpiresDatetime().isBefore(LocalDateTime.now())) {
-                throw new RuntimeException("Verification code has expired!");
-            }
-            if (user.getVerificationCode().equals(request.getVerificationCode())) {
-                user.setEnabled(true);
-                user.setVerificationCode(null);
-                user.setVerificationExpiresDatetime(null);
-                userRepository.save(user);
-            } else {
-                throw new RuntimeException("Invalid verification code!");
-            }
+        User user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        if (user.getVerificationExpiresDatetime().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Verification code has expired!");
+        }
+        if (user.getVerificationCode().equals(request.getVerificationCode())) {
+            user.setEnabled(true);
+            user.setVerificationCode(null);
+            user.setVerificationExpiresDatetime(null);
+            userRepository.save(user);
         } else {
-            throw new RuntimeException("User not found!");
+            throw new RuntimeException("Invalid verification code!");
         }
     }
 

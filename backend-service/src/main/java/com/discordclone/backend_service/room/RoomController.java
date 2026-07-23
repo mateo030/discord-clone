@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -27,8 +30,10 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<RoomResponseDto> createRoom(@RequestBody RoomRequestDto entity) {
-        return ResponseEntity.ok(roomService.createRoom(entity));
+    public ResponseEntity<RoomResponseDto> createRoom(@Valid @RequestBody RoomRequestDto request) {
+        log.debug("Request ID: {}", request.id());
+        System.out.println("Room name: " + request.roomName());
+        return ResponseEntity.ok(roomService.createRoom(request));
     }
     
     // TODO: Return Response DTO

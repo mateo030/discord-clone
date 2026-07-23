@@ -24,7 +24,7 @@ export const channelAPI = {
   getDm: async function (cancel = false): Promise<Channel[]> {
     try {
       const response = await privateApi.get<Channel[]>("/channels", {
-        params: { is_dm: true },
+        params: { isDm: true },
         signal: cancel
           ? cancelApiObject[this.get.name].handleRequestCancellation().signal
           : undefined,

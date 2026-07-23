@@ -12,50 +12,50 @@ export interface InitData {
 
 export interface Room {
   id: string;
-  owner_id: string;
+  ownerId: string;
   code: string;
-  room_name: string;
-  created_at: string;
-  created_user: string;
-  updated_at: string;
-  updated_user: string;
-  delete_flag: boolean;
+  roomName: string;
+  createdAt: string;
+  createdUser: string;
+  updatedAt: string;
+  updatedUser: string;
+  deleteFlag: boolean;
 }
 
 export interface RoomMember {
   id: string;
-  user_id: string;
-  room_id: string;
-  created_at: string;
-  created_user: string;
-  updated_at: string;
-  updated_user: string;
-  delete_flag: boolean;
+  userId: string;
+  roomId: string;
+  createdAt: string;
+  createdUser: string;
+  updatedAt: string;
+  updatedUser: string;
+  deleteFlag: boolean;
 }
 
 export interface Channel {
   id: string;
-  room_id: string;
-  channel_name: string;
-  is_dm: boolean;
-  room_name: string;
-  created_at: string;
-  created_user: string;
-  updated_at: string;
-  updated_user: string;
-  delete_flag: boolean;
+  roomId: string;
+  channelName: string;
+  isDm: boolean;
+  roomName: string;
+  createdAt: string;
+  createdUser: string;
+  updatedAt: string;
+  updatedUser: string;
+  deleteFlag: boolean;
 }
 
 export interface Message {
   id: string;
-  channel_id: string;
-  user_id: string;
+  channelId: string;
+  userId: string;
   content: string;
-  created_at: string;
-  created_user: string;
-  updated_at: string;
-  updated_user: string;
-  delete_flag: boolean;
+  createdAt: string;
+  createdUser: string;
+  updatedAt: string;
+  updatedUser: string;
+  deleteFlag: boolean;
 }
 
 export interface User {

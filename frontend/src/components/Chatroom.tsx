@@ -35,7 +35,7 @@ export const Chatroom: React.FC<ChatroomProps> = ({
                   User
                 </button>
               </h4>
-              <small>{message.created_at}</small>
+              <small>{message.createdAt}</small>
             </div>
             <p>{message.content}</p>
           </div>

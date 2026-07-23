@@ -45,7 +45,7 @@ export const SideBar: React.FC<SideBarProps> = ({
         <ul>
           {roomList.map((room, index) => (
             <li role="button" key={index} onClick={() => onRoomClick(room.id)}>
-              {room.room_name}
+              {room.roomName}
             </li>
           ))}
         </ul>
@@ -64,9 +64,9 @@ export const SideBar: React.FC<SideBarProps> = ({
             <li
               role="button"
               key={index}
-              onClick={() => onChannelClick(channel.id, channel.channel_name)}
+              onClick={() => onChannelClick(channel.id, channel.channelName)}
             >
-              # {channel.channel_name}
+              # {channel.channelName}
             </li>
           ))}
         </ul>
@@ -78,9 +78,9 @@ export const SideBar: React.FC<SideBarProps> = ({
             <li
               role="button"
               key={index}
-              onClick={() => onChannelClick(channel.id, channel.channel_name)}
+              onClick={() => onChannelClick(channel.id, channel.channelName)}
             >
-              {channel.channel_name}
+              {channel.channelName}
             </li>
           ))} */}
         </ul>

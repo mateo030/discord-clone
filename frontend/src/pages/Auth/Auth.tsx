@@ -6,46 +6,19 @@ import { LoginForm } from "@/components/LoginForm";
 import { RegisterForm } from "@/components/RegisterForm";
 import { VerifyForm } from "@/components/VerifyForm";
 import { useAuth } from "@/context/authContext";
-
 import "./style.css";
+import type {
+  LoginFormData,
+  RegisterFormData,
+  VerifyFormData,
+} from "@/types/types";
 
-interface RegisterFormData {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  role: string;
-}
-
-interface LoginFormData {
-  email: string;
-  password: string;
-}
-
-interface VerifyFormData {
-  email: string;
-  verificationCode: string;
-}
-
+// TODO: Change to enum
 type FormMode = "login" | "register" | "verify";
 
 export const Auth: React.FC = () => {
   const [formMode, setFormMode] = useState<FormMode>("login");
-  const [loginData, setLoginData] = useState<LoginFormData>({
-    email: "",
-    password: "",
-  });
-  const [registerData, setRegisterData] = useState<RegisterFormData>({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: "ROLE_USER",
-  });
-  const [verifyFormData, setVerifyFormData] = useState<VerifyFormData>({
-    email: "",
-    verificationCode: "",
-  });
+  const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -55,80 +28,56 @@ export const Auth: React.FC = () => {
     setFormMode(formMode);
   };
 
-  const handleLoginFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setLoginData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-  };
-
-  const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const payload = { email: loginData.email, password: loginData.password };
-    const res = await authApi.login(false, payload);
-    if (res) {
+  const handleLogin = async (data: LoginFormData) => {
+    try {
+      const res = await authApi.login(false, data);
+      console.log(res);
       login(res.user, res.role);
       navigate("/dash");
-    } else {
-      console.error("Login failed");
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const handleRegisterFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setRegisterData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
+  // TODO: Add a waiting symbol after pressing register btn
+  const handleRegister = async (data: RegisterFormData) => {
+    const role = "ROLE_USER";
+    const payload = {
+      ...data,
+      role,
+    };
+    try {
+      const res = await authApi.signup(false, payload);
+      console.log(res);
+      setRegisteredEmail(data.email);
+      toggleMode("verify");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleRegister = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    console.log("Register Data:", registerData);
-    const response = authApi.signup(false, registerData);
-    console.log(response);
-    toggleMode("verify");
-  };
-
-  const handleVerifyFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setVerifyFormData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-  };
-
-  const handleVerify = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    console.log("Verify Form Data:", verifyFormData);
-    const response = authApi.verify(false, verifyFormData);
-    console.log(response);
+  const handleVerify = async (data: VerifyFormData) => {
+    try {
+      const response = await authApi.verify(false, data);
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const displayForms = (formMode: FormMode) => {
     switch (formMode) {
       case "register":
         return (
-          <RegisterForm
-            onFormChange={handleRegisterFormChange}
-            onRegister={handleRegister}
-            toggleMode={toggleMode}
-          />
+          <RegisterForm onSubmit={handleRegister} toggleMode={toggleMode} />
         );
       case "login":
-        return (
-          <LoginForm
-            onFormChange={handleLoginFormChange}
-            onLogin={handleLogin}
-            toggleMode={toggleMode}
-          />
-        );
+        return <LoginForm onSubmit={handleLogin} toggleMode={toggleMode} />;
       case "verify":
         return (
           <VerifyForm
-            onFormChange={handleVerifyFormChange}
-            onVerify={handleVerify}
+            onSubmit={handleVerify}
+            initialEmail={registeredEmail ?? undefined}
           />
         );
     }
@@ -140,7 +89,6 @@ export const Auth: React.FC = () => {
         <h1 className="logo">Whisper</h1>
         <p className="subtitle">A light-weight chat system</p>
       </div>
-
       {displayForms(formMode)}
     </>
   );

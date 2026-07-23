@@ -78,7 +78,7 @@ public class AuthController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<?> verifyUser(@RequestBody VerifyUserRequest request) {
+    public ResponseEntity<?> verifyUser(@Valid @RequestBody VerifyUserRequest request) {
         try {
             authService.verifyUser(request);
             return ResponseEntity.ok("Account verified successfully");

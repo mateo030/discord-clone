@@ -31,6 +31,8 @@ export const Dash: React.FC = () => {
     setSelectedChannelName,
   } = useInitialize();
 
+  const { user } = useAuth();
+
   console.log("Init data: ", initData);
 
   const handleRoomCLick = (roomId: string) => {
@@ -58,12 +60,16 @@ export const Dash: React.FC = () => {
   };
 
   const handleCreateRoom = async () => {
-    const params = {
-      ownerId: "test", // TODO: Remove "test", replace with real user id
-      roomName: createRoomFormData.roomName,
-    };
-
     try {
+      if (user == null) return;
+
+      const params = {
+        id: user.id,
+        roomName: createRoomFormData.roomName,
+      };
+
+      console.log("Room name: ", createRoomFormData.roomName);
+
       const newRoom = await roomAPI.post(false, params);
       console.log("Room created: ", newRoom);
       // Optionally, you can refresh the room list or navigate to the new room
@@ -115,7 +121,7 @@ export const Dash: React.FC = () => {
         />
         <Chatroom
           selectedChannelName={selectedChannelName}
-          messageList={initData.message}
+          messageList={initData.message} // TODO: Implement messaging
         />
       </div>
     );
