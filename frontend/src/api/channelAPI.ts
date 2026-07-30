@@ -14,7 +14,6 @@ export const channelAPI = {
           : undefined,
       });
       return response.data;
-      console.log("Channel API GET Response: ", response.data);
     } catch (error: any) {
       console.error(error.message);
       throw error;
@@ -46,8 +45,6 @@ export const channelAPI = {
           ? cancelApiObject[this.get.name].handleRequestCancellation().signal
           : undefined,
       });
-      console.log("params: ", params);
-      console.log("Channel API POST Response: ", response.data);
       return response.data;
     } catch (error: any) {
       console.error(error.message);

@@ -45,14 +45,11 @@ export const Dash: React.FC = () => {
   const handleCreateChannel: SubmitHandler<CreateChannelFormData> = async (
     data,
   ) => {
-    console.log("Create channel", data);
     try {
       if (!data) return;
 
       const payload = { roomId: selectedRoomId, channelName: data.channelName };
-
-      const response = channelAPI.post(payload, false);
-      console.log("Create channel response: ", response);
+      channelAPI.post(payload, false);
     } catch (error) {
       console.error(error);
     }
@@ -72,9 +69,7 @@ export const Dash: React.FC = () => {
         roomName: data.roomName,
       };
 
-      const newRoomResponse = await roomAPI.post(false, params);
-      console.log(newRoomResponse);
-      // Optionally, you can refresh the room list or navigate to the new room
+      await roomAPI.post(false, params);
     } catch (error) {
       console.error("Error creating room: ", error);
     }
@@ -88,9 +83,7 @@ export const Dash: React.FC = () => {
         id: user.id,
         code: data.code,
       };
-      const joinResponse = await roomMemberAPI.post(false, params);
-      console.log("Room joined: ", joinResponse);
-      // Optionally, you can refresh the room list or navigate to the new room
+      await roomMemberAPI.post(false, params);
     } catch (error) {
       console.error("Error joining room: ", error);
     }

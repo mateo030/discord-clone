@@ -39,6 +39,7 @@ export const useInitialize = () => {
         if (channelResponse && channelResponse.length > 0) {
           channelData = channelResponse;
           setSelectedChannelId(channelData[0].id);
+          setSelectedChannelName(channelData[0].channelName);
         }
 
         // const messageResponse = await messageAPI.get(channelData[0].id);

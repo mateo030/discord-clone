@@ -6,7 +6,6 @@ import { defineCancelApiObject } from "./configs/axiosUtils";
 export const authApi = {
   login: async function (cancel = false, params: any): Promise<LoginResponse> {
     try {
-      console.log(params);
       const response = await publicApi.request<LoginResponse>({
         url: `/auth/signin`,
         method: "POST",
@@ -26,7 +25,6 @@ export const authApi = {
 
   signup: async function (cancel = false, params: any): Promise<User[]> {
     try {
-      console.log(params);
       const response = await publicApi.request<User[]>({
         url: `/auth/signup`,
         method: "POST",
@@ -44,7 +42,6 @@ export const authApi = {
 
   verify: async function (cancel = false, params: any): Promise<User[]> {
     try {
-      console.log(params);
       const response = await publicApi.request<User[]>({
         url: `/auth/verify`,
         method: "POST",

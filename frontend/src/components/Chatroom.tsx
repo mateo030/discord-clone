@@ -21,7 +21,7 @@ export const Chatroom: React.FC<ChatroomProps> = ({
   return (
     <div className="chatroom">
       <div className="chatroom-header">
-        <h1># {selectedChannelName}</h1>
+        <h2># {selectedChannelName}</h2>
       </div>
       <div className="chatroom-body">
         {/* {messageList.map((message, index) => (

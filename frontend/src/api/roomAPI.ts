@@ -13,7 +13,6 @@ export const roomAPI = {
           ? cancelApiObject[this.get.name].handleRequestCancellation().signal
           : undefined,
       });
-      console.log("roomAPI GET response: ", response.data);
       return response.data;
     } catch (error: any) {
       console.error(error.message);
@@ -31,7 +30,6 @@ export const roomAPI = {
           ? cancelApiObject[this.get.name].handleRequestCancellation().signal
           : undefined,
       });
-      console.log(response.data);
       return response.data;
     } catch (error: any) {
       console.error(error.message);
