@@ -3,6 +3,8 @@ package com.discordclone.backend_service.channel;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +26,8 @@ public class ChannelController {
     }
 
     @PostMapping
-    public ResponseEntity<ChannelResponseDto> createChannel(@RequestBody ChannelRequestDto req) {
+    public ResponseEntity<ChannelResponseDto> createChannel(@Valid @RequestBody ChannelRequestDto req) {
+        System.out.println(req.roomId());
         return ResponseEntity.ok(channelService.createChannel(req));
     }
 

@@ -15,3 +15,18 @@ export type VerifyFormData = {
   email: string;
   verificationCode: string;
 };
+
+export type CreateRoomFormData = {
+  id: string;
+  roomName: string;
+};
+
+export type JoinRoomFormData = {
+  id: string;
+  code: string;
+};
+
+export type CreateChannelFormData = {
+  roomId: string;
+  channelName: string;
+};

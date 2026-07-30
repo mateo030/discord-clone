@@ -3,7 +3,6 @@ import type { Room } from "../types/api";
 import { privateApi } from "./configs/axiosConfigs";
 import { defineCancelApiObject } from "./configs/axiosUtils";
 
-// TODO: Change return type to ApiResponse when implementing backend
 export const roomAPI = {
   get: async function (cancel = false, id: string): Promise<Room[]> {
     try {
@@ -14,7 +13,7 @@ export const roomAPI = {
           ? cancelApiObject[this.get.name].handleRequestCancellation().signal
           : undefined,
       });
-      console.log(response.data);
+      console.log("roomAPI GET response: ", response.data);
       return response.data;
     } catch (error: any) {
       console.error(error.message);

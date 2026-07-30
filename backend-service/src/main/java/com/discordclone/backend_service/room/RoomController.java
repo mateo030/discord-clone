@@ -32,13 +32,12 @@ public class RoomController {
     @PostMapping
     public ResponseEntity<RoomResponseDto> createRoom(@Valid @RequestBody RoomRequestDto request) {
         log.debug("Request ID: {}", request.id());
-        System.out.println("Room name: " + request.roomName());
         return ResponseEntity.ok(roomService.createRoom(request));
     }
     
     // TODO: Return Response DTO
     @GetMapping
-    public ResponseEntity<?> getRoomsByUserId(@RequestParam String userId) {
+    public ResponseEntity<?> getRoomsByUserId(@Valid @RequestParam String userId) {
         log.debug("Fetching rooms for the userId: {}", userId);
         try {
             UUID uuid = UUID.fromString(userId);

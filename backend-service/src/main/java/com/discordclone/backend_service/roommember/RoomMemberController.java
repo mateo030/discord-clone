@@ -2,6 +2,9 @@ package com.discordclone.backend_service.roommember;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +21,7 @@ public class RoomMemberController {
     }
 
     @PostMapping
-    public ResponseEntity<RoomMemberResponseDto> createMember(@RequestBody RoomMemberRequestDto request) {
+    public ResponseEntity<RoomMemberResponseDto> createMember(@Valid @RequestBody RoomMemberRequestDto request) {
         return ResponseEntity.ok(this.roomMemberService.createMember(request));
     }
     

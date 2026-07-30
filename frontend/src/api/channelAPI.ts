@@ -13,8 +13,8 @@ export const channelAPI = {
           ? cancelApiObject[this.get.name].handleRequestCancellation().signal
           : undefined,
       });
-      console.log(response.data);
       return response.data;
+      console.log("Channel API GET Response: ", response.data);
     } catch (error: any) {
       console.error(error.message);
       throw error;
@@ -29,7 +29,25 @@ export const channelAPI = {
           ? cancelApiObject[this.get.name].handleRequestCancellation().signal
           : undefined,
       });
-      console.log(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(error.message);
+      throw error;
+    }
+  },
+
+  post: async function (params: any, cancel = false): Promise<Channel[]> {
+    try {
+      const response = await privateApi.request<Channel[]>({
+        url: "/channels",
+        method: "POST",
+        data: params,
+        signal: cancel
+          ? cancelApiObject[this.get.name].handleRequestCancellation().signal
+          : undefined,
+      });
+      console.log("params: ", params);
+      console.log("Channel API POST Response: ", response.data);
       return response.data;
     } catch (error: any) {
       console.error(error.message);

@@ -42,8 +42,8 @@ public class ChannelService {
         );
     }
 
-    public List<ChannelResponseDto> getChannels(UUID RoomId) {
-        return channelRepository.findByRoomId(RoomId).stream()
+    public List<ChannelResponseDto> getChannels(UUID roomId) {
+        return channelRepository.findByRoomId(roomId).stream()
             .map(channel -> new ChannelResponseDto(
                 channel.getId(),
                 channel.getRoom().getId(),

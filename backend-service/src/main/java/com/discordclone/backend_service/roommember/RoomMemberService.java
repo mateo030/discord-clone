@@ -20,7 +20,7 @@ public class RoomMemberService {
         this.roomRepository.findByCode(request.code())
             .orElseThrow(() -> new IllegalArgumentException("Room with code " + request.code() + " not found."));
         RoomMember roomMember = new RoomMember();
-        roomMember.setUserId(request.userId());
+        roomMember.setUserId(request.id());
         RoomMember savedRoomMember = this.roomMemberRepository.save(roomMember);
         return new RoomMemberResponseDto(
             savedRoomMember.getId(),
