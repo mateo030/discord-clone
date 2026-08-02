@@ -20,6 +20,23 @@ export const messageAPI = {
       throw error;
     }
   },
+
+  post: async function (cancel = false, params: any): Promise<Message[]> {
+    try {
+      const response = await privateApi.request<Message[]>({
+        url: "/messages",
+        method: "POST",
+        data: params,
+        signal: cancel
+          ? cancelApiObject[this.get.name].handleRequestCancellation().signal
+          : undefined,
+      });
+      return response.data;
+    } catch (error: any) {
+      console.error(error.message);
+      throw error;
+    }
+  },
 };
 
 const cancelApiObject = defineCancelApiObject(messageAPI);

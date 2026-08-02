@@ -6,6 +6,7 @@ import { SideBar } from "../../components/SideBar";
 import { useAuth } from "../../context/authContext";
 
 import { channelAPI } from "@/api/channelAPI";
+import { messageAPI } from "@/api/messageAPI";
 import { roomAPI } from "@/api/roomAPI";
 import { roomMemberAPI } from "@/api/roomMemberAPI";
 import { useInitialize } from "@/hooks/useInitialize";
@@ -86,6 +87,20 @@ export const Dash: React.FC = () => {
       await roomMemberAPI.post(false, params);
     } catch (error) {
       console.error("Error joining room: ", error);
+    }
+  };
+
+  const handleSendMessage: SubmitHandler<MessageData> = async (data) => {
+    try {
+      if (user == null) return;
+
+      const params = {
+        id: user.id,
+        code: data.code,
+      };
+      await messageAPI.post(false, params);
+    } catch (error) {
+      console.error("Error sending message: ", error);
     }
   };
 

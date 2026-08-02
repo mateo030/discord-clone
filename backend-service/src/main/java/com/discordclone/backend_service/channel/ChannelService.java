@@ -26,7 +26,7 @@ public class ChannelService {
         Channel channel = new Channel();
 
         Room room = roomRepository.findById(request.roomId())
-            .orElseThrow(() -> new ResourceNotFoundException("Channel not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
         channel.setRoom(room);
         channel.setChannelName(request.channelName());
         channel.setIsDm(false);

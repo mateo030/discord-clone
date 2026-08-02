@@ -6,6 +6,7 @@ import type { Message } from "@/types/api";
 type ChatroomProps = {
   selectedChannelName: string;
   messageList: Message[];
+  onMessageSend: SubmitHandler<MessageData>;
 };
 
 export const Chatroom: React.FC<ChatroomProps> = ({

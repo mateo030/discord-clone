@@ -9,6 +9,4 @@ public record RoomMemberResponseDto(
     LocalDateTime createdAt,
     UUID createdUserId,
     LocalDateTime updatedAt
-) {
-
-}
+) {}

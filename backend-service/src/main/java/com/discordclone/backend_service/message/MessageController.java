@@ -1,0 +1,43 @@
+package com.discordclone.backend_service.message;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+@RequestMapping("/api/messages")
+public class MessageController {
+
+    private final MessageService messageService;
+    
+    public MessageController(MessageService messageService) {
+        this.messageService = messageService;
+    }
+
+    @PostMapping
+    public ResponseEntity<MessageResponseDto> createMessage(@Valid @RequestBody MessageRequestDto req) {
+        MessageResponseDto messageResponse = messageService.createMessage(req);
+        return ResponseEntity.status(HttpStatus.CREATED).body(messageResponse); 
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MessageResponseDto>> getMessages(@RequestParam UUID channelId) {
+        List<MessageResponseDto> messageResponse = messageService.getMessages(channelId);
+        if (messageResponse.size() == 0) {
+            return ResponseEntity.status(HttpStatus.OK).body(messageResponse);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(messageResponse);
+    }
+    
+}
