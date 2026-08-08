@@ -14,6 +14,7 @@ import type {
   CreateChannelFormData,
   CreateRoomFormData,
   JoinRoomFormData,
+  MessageData,
 } from "@/types/types";
 
 import "./style.css";
@@ -25,6 +26,7 @@ export const Dash: React.FC = () => {
   const {
     initData,
     selectedRoomId,
+    selectedChannelId,
     selectedChannelName,
     isLoading,
     setSelectedRoomId,
@@ -95,8 +97,9 @@ export const Dash: React.FC = () => {
       if (user == null) return;
 
       const params = {
-        id: user.id,
-        code: data.code,
+        channelId: selectedChannelId,
+        senderId: user.id,
+        content: data.content,
       };
       await messageAPI.post(false, params);
     } catch (error) {
@@ -122,7 +125,8 @@ export const Dash: React.FC = () => {
         />
         <Chatroom
           selectedChannelName={selectedChannelName}
-          messageList={initData.message} // TODO: Implement messaging
+          messageList={initData.message}
+          onMessageSend={handleSendMessage}
         />
       </div>
     );

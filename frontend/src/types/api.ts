@@ -7,7 +7,7 @@ export interface ApiResponse<T> {
 export interface InitData {
   room: Room[];
   channel: Channel[];
-  // message: Message[];
+  message: Message[];
 }
 
 export interface Room {

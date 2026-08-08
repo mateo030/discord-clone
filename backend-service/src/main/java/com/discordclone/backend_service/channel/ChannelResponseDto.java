@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record ChannelResponseDto(
-    UUID channelId,
+    UUID id,
     UUID roomId,
     String channelName,
     boolean isDm,

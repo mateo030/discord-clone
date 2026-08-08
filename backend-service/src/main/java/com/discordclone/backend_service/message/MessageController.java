@@ -32,8 +32,9 @@ public class MessageController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MessageResponseDto>> getMessages(@RequestParam UUID channelId) {
-        List<MessageResponseDto> messageResponse = messageService.getMessages(channelId);
+    public ResponseEntity<List<MessageResponseDto>> getMessages(@Valid @RequestParam String channelId) {
+        UUID uuid = UUID.fromString(channelId);
+        List<MessageResponseDto> messageResponse = messageService.getMessages(uuid);
         if (messageResponse.size() == 0) {
             return ResponseEntity.status(HttpStatus.OK).body(messageResponse);
         }

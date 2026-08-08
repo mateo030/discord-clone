@@ -30,3 +30,9 @@ export type CreateChannelFormData = {
   roomId: string;
   channelName: string;
 };
+
+export type MessageData = {
+  channelId: string;
+  senderId: string;
+  content: string;
+};

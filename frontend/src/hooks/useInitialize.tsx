@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { channelAPI } from "@/api/channelAPI";
-// import { messageAPI } from "@/api/messageAPI";
+import { messageAPI } from "@/api/messageAPI";
 import { roomAPI } from "@/api/roomAPI";
 import { useAuth } from "@/context/authContext";
 import type { InitData } from "@/types/api";
@@ -10,6 +10,7 @@ export const useInitialize = () => {
   const [initData, setInitData] = useState<InitData>({
     room: [],
     channel: [],
+    message: [],
   });
   const [selectedRoomId, setSelectedRoomId] = useState<string>("");
   const [selectedChannelId, setSelectedChannelId] = useState<string>("");
@@ -17,10 +18,6 @@ export const useInitialize = () => {
 
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
-
-  console.log("Selected Room Id: ", selectedRoomId);
-  console.log("Selected Channel Id: ", selectedChannelId);
-  console.log(initData);
 
   useEffect(() => {
     async function fetchRoomData() {
@@ -57,11 +54,9 @@ export const useInitialize = () => {
             ...prev,
             channel: [],
           }));
-          setSelectedChannelId("");
-          setSelectedChannelName("");
           return;
         }
-
+        console.log("There is channel data for this room");
         setInitData((prev) => ({
           ...prev,
           channel: channelData,
@@ -77,6 +72,34 @@ export const useInitialize = () => {
 
     fetchChannelData();
   }, [selectedRoomId]);
+
+  useEffect(() => {
+    if (!selectedChannelId) return;
+
+    async function fetchMessages() {
+      setIsLoading(true);
+      try {
+        const messages = await messageAPI.get(selectedChannelId);
+        // NOTE: Guard not needed?
+        if (!messages || messages.length === 0) {
+          return;
+        }
+
+        setInitData((prev) => ({
+          ...prev,
+          message: messages,
+        }));
+        console.log("Fetched messages: ", initData.message);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchMessages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedChannelId]); // Disabled lint error because adding initData.message will trigger infinite loop
 
   return {
     initData,
