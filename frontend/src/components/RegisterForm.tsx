@@ -6,11 +6,15 @@ type FormMode = "login" | "register" | "verify";
 interface RegistrationFormProps {
   onSubmit: SubmitHandler<RegisterFormData>;
   toggleMode: (formMode: FormMode) => void;
+  isLoading?: boolean;
+  serverError?: string;
 }
 
 export const RegisterForm: React.FC<RegistrationFormProps> = ({
   onSubmit,
   toggleMode,
+  isLoading,
+  serverError,
 }) => {
   const {
     register,
@@ -99,9 +103,12 @@ export const RegisterForm: React.FC<RegistrationFormProps> = ({
         />
       </div>
       {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
+      {serverError && <p className="form-error">{serverError}</p>}
       <span>Forgot Password?</span>
       <span onClick={() => toggleMode("login")}>Already have an account?</span>
-      <button type="submit">Sign In</button>
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? "Registering..." : "Sign In"}
+      </button>
     </form>
   );
 };

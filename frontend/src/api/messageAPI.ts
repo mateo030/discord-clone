@@ -4,7 +4,10 @@ import { privateApi } from "./configs/axiosConfigs";
 import { defineCancelApiObject } from "./configs/axiosUtils";
 
 export const messageAPI = {
-  get: async function (params: string, cancel = false): Promise<Message[]> {
+  get: async function (
+    params: string | undefined,
+    cancel = false,
+  ): Promise<Message[]> {
     try {
       const response = await privateApi.get<Message[]>("/messages", {
         params: { channelId: params },

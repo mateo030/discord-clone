@@ -22,7 +22,6 @@ export const Chatroom: React.FC<ChatroomProps> = ({
     formState: { errors },
   } = useForm<MessageData>();
   const [isDmModalOpen, setIsDmModalOpen] = useState<boolean>(false);
-  console.log(messageList);
   return (
     <div className="chatroom">
       <div className="chatroom-header">

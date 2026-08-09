@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,65 +20,95 @@ type FormMode = "login" | "register" | "verify";
 export const Auth: React.FC = () => {
   const [formMode, setFormMode] = useState<FormMode>("login");
   const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
-
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // MEMO: Should this function really be like this
-  const toggleMode = (formMode: FormMode) => {
-    setFormMode(formMode);
-  };
-
-  const handleLogin = async (data: LoginFormData) => {
-    try {
-      const res = await authApi.login(false, data);
-      console.log(res);
-      login(res.user, res.role);
+  const loginMutation = useMutation({
+    mutationFn: (data: LoginFormData) => authApi.login(false, data),
+    onSuccess: (data) => {
+      login(data.user, data.role);
       navigate("/dash");
-    } catch (err) {
-      console.error(err);
-    }
+    },
+    onError: (error: unknown) => {
+      console.error("Login failed:", error);
+    },
+  });
+
+  const signupMutation = useMutation({
+    mutationFn: (payload: RegisterFormData & { role: string }) =>
+      authApi.signup(false, payload),
+    onSuccess: (_data, variables) => {
+      setRegisteredEmail(variables.email);
+      setFormMode("verify");
+    },
+    onError: (error: unknown) => {
+      console.error("Registration failed:", error);
+    },
+  });
+
+  const verifyMutation = useMutation({
+    mutationFn: (data: VerifyFormData) => authApi.verify(false, data),
+    onSuccess: () => {
+      setFormMode("login");
+    },
+    onError: (error: unknown) => {
+      console.error("Verification failed:", error);
+    },
+  });
+
+  const toggleMode = (mode: FormMode) => {
+    setFormMode(mode);
   };
 
-  // TODO: Add a waiting symbol after pressing register btn
-  const handleRegister = async (data: RegisterFormData) => {
-    const role = "ROLE_USER";
+  const handleLogin = (data: LoginFormData) => {
+    loginMutation.mutate(data);
+  };
+
+  const handleRegister = (data: RegisterFormData) => {
     const payload = {
       ...data,
-      role,
+      role: "ROLE_USER",
     };
-    try {
-      const res = await authApi.signup(false, payload);
-      console.log(res);
-      setRegisteredEmail(data.email);
-      toggleMode("verify");
-    } catch (err) {
-      console.error(err);
-    }
+    signupMutation.mutate(payload);
   };
 
-  const handleVerify = async (data: VerifyFormData) => {
-    try {
-      const response = await authApi.verify(false, data);
-      console.log(response);
-    } catch (err) {
-      console.error(err);
-    }
+  const handleVerify = (data: VerifyFormData) => {
+    verifyMutation.mutate(data);
   };
 
   const displayForms = (formMode: FormMode) => {
     switch (formMode) {
       case "register":
         return (
-          <RegisterForm onSubmit={handleRegister} toggleMode={toggleMode} />
+          <RegisterForm
+            onSubmit={handleRegister}
+            toggleMode={toggleMode}
+            isLoading={signupMutation.isPending}
+            serverError={
+              signupMutation.error ? String(signupMutation.error) : undefined
+            }
+          />
         );
       case "login":
-        return <LoginForm onSubmit={handleLogin} toggleMode={toggleMode} />;
+        return (
+          <LoginForm
+            onSubmit={handleLogin}
+            toggleMode={toggleMode}
+            isLoading={loginMutation.isPending}
+            serverError={
+              loginMutation.error ? String(loginMutation.error) : undefined
+            }
+          />
+        );
       case "verify":
         return (
           <VerifyForm
             onSubmit={handleVerify}
             initialEmail={registeredEmail ?? undefined}
+            isLoading={verifyMutation.isPending}
+            serverError={
+              verifyMutation.error ? String(verifyMutation.error) : undefined
+            }
           />
         );
     }

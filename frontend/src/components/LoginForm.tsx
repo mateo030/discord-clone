@@ -7,11 +7,15 @@ type FormMode = "login" | "register" | "verify";
 interface LoginFormProps {
   onSubmit: SubmitHandler<LoginFormData>;
   toggleMode: (formMode: FormMode) => void;
+  isLoading?: boolean;
+  serverError?: string;
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({
   onSubmit,
   toggleMode,
+  isLoading,
+  serverError,
 }) => {
   const {
     register,
@@ -47,9 +51,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         />
       </div>
       {errors.password && <p>{errors.password.message}</p>}
+      {serverError && <p className="form-error">{serverError}</p>}
       <span>Forgot Password?</span>
       <span onClick={() => toggleMode("register")}>Dont have an account?</span>
-      <button type="submit">Sign In</button>
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? "Signing In..." : "Sign In"}
+      </button>
     </form>
   );
 };

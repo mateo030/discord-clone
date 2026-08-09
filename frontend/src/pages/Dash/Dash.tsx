@@ -1,3 +1,5 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { type SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -20,24 +22,21 @@ import type {
 import "./style.css";
 
 export const Dash: React.FC = () => {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-
-  const {
-    initData,
+  const [selectedRoomId, setSelectedRoomId] = useState<string>("");
+  const [selectedChannelId, setSelectedChannelId] = useState<string>("");
+  const [selectedChannelName, setSelectedChannelName] = useState<string>("");
+  const { rooms, channels, messages } = useInitialize(
     selectedRoomId,
     selectedChannelId,
-    selectedChannelName,
-    isLoading,
-    setSelectedRoomId,
-    setSelectedChannelId,
-    setSelectedChannelName,
-  } = useInitialize();
-
-  const { user } = useAuth();
+  );
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleRoomCLick = (roomId: string) => {
     setSelectedRoomId(roomId);
+    setSelectedChannelId("");
+    setSelectedChannelName("");
   };
 
   const handleChannelClick = (channelId: string, channelName: string) => {
@@ -45,17 +44,32 @@ export const Dash: React.FC = () => {
     setSelectedChannelName(channelName);
   };
 
+  const createChannelMutation = useMutation({
+    mutationFn: (data: CreateChannelFormData) =>
+      channelAPI.post(
+        { roomId: selectedRoomId, channelName: data.channelName },
+        false,
+      ),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["channels", selectedRoomId],
+      });
+      await queryClient.invalidateQueries({ queryKey: ["rooms", user?.id] });
+    },
+    onError: (error: unknown) => {
+      console.error("Channel creation failed: ", error);
+    },
+  });
+
   const handleCreateChannel: SubmitHandler<CreateChannelFormData> = async (
     data,
   ) => {
-    try {
-      if (!data) return;
-
-      const payload = { roomId: selectedRoomId, channelName: data.channelName };
-      channelAPI.post(payload, false);
-    } catch (error) {
-      console.error(error);
+    if (!selectedRoomId) {
+      console.error("Please select a room before creating a channel");
+      return;
     }
+
+    createChannelMutation.mutate(data);
   };
 
   const handleLogout = () => {
@@ -63,72 +77,97 @@ export const Dash: React.FC = () => {
     navigate("/");
   };
 
-  const handleCreateRoom: SubmitHandler<CreateRoomFormData> = async (data) => {
-    try {
-      if (user == null) return;
-
-      const params = {
+  const createRoomMutation = useMutation({
+    mutationFn: (data: CreateRoomFormData) =>
+      roomAPI.post(false, {
         roomId: selectedRoomId,
         roomName: data.roomName,
-      };
-
-      await roomAPI.post(false, params);
-    } catch (error) {
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["rooms", user?.id] });
+    },
+    onError: (error: unknown) => {
       console.error("Error creating room: ", error);
-    }
+    },
+  });
+
+  const handleCreateRoom: SubmitHandler<CreateRoomFormData> = async (data) => {
+    if (user == null) return;
+
+    createRoomMutation.mutate(data);
   };
+
+  const joinMutation = useMutation({
+    mutationFn: (payload: JoinRoomFormData & { id: string }) =>
+      roomMemberAPI.post(false, payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["rooms", user?.id] });
+    },
+    onError: (error: unknown) => {
+      console.error("Room join failed: ", error);
+    },
+  });
 
   const handleRoomJoin: SubmitHandler<JoinRoomFormData> = async (data) => {
-    try {
-      if (user == null) return;
-
-      const params = {
-        id: user.id,
-        code: data.code,
-      };
-      await roomMemberAPI.post(false, params);
-    } catch (error) {
-      console.error("Error joining room: ", error);
+    if (!user) {
+      console.error("Current user doesn't exist! Unable to join server");
+      return;
     }
+
+    const payload = {
+      id: user.id,
+      code: data.code,
+    };
+
+    joinMutation.mutate(payload);
   };
+
+  const messageMutation = useMutation({
+    mutationFn: (
+      payload: MessageData & { channelId: string; senderId: string },
+    ) => messageAPI.post(false, payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["messages", selectedChannelId],
+      });
+    },
+    onError: (error: unknown) => {
+      console.error("Message failed: ", error);
+    },
+  });
 
   const handleSendMessage: SubmitHandler<MessageData> = async (data) => {
-    try {
-      if (user == null) return;
-
-      const params = {
-        channelId: selectedChannelId,
-        senderId: user.id,
-        content: data.content,
-      };
-      await messageAPI.post(false, params);
-    } catch (error) {
-      console.error("Error sending message: ", error);
+    if (!user) {
+      console.error("Current user doesn't exist! Unable to send message");
+      return;
     }
+
+    const payload = {
+      channelId: selectedChannelId,
+      senderId: user.id,
+      content: data.content,
+    };
+
+    messageMutation.mutate(payload);
   };
 
-  if (isLoading) {
-    return <h1>Data loading</h1>;
-  } else {
-    return (
-      <div className="content">
-        <SideBar
-          roomList={initData.room}
-          channelList={initData.channel}
-          // dmChannel={dmChannel}
-          onRoomClick={handleRoomCLick}
-          onChannelClick={handleChannelClick}
-          handleLogout={handleLogout}
-          onRoomJoin={handleRoomJoin}
-          onRoomSubmit={handleCreateRoom}
-          onChannelSubmit={handleCreateChannel}
-        />
-        <Chatroom
-          selectedChannelName={selectedChannelName}
-          messageList={initData.message}
-          onMessageSend={handleSendMessage}
-        />
-      </div>
-    );
-  }
+  return (
+    <div className="content">
+      <SideBar
+        roomList={rooms}
+        channelList={channels}
+        onRoomClick={handleRoomCLick}
+        onChannelClick={handleChannelClick}
+        handleLogout={handleLogout}
+        onRoomJoin={handleRoomJoin}
+        onRoomSubmit={handleCreateRoom}
+        onChannelSubmit={handleCreateChannel}
+      />
+      <Chatroom
+        selectedChannelName={selectedChannelName}
+        messageList={messages}
+        onMessageSend={handleSendMessage}
+      />
+    </div>
+  );
 };

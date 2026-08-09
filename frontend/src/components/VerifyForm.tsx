@@ -5,11 +5,15 @@ import type { VerifyFormData } from "@/types/types";
 type VerifyFormProps = {
   onSubmit: SubmitHandler<VerifyFormData>;
   initialEmail?: string;
+  isLoading?: boolean;
+  serverError?: string;
 };
 
 export const VerifyForm: React.FC<VerifyFormProps> = ({
   onSubmit,
   initialEmail,
+  isLoading,
+  serverError,
 }) => {
   const {
     register,
@@ -32,7 +36,10 @@ export const VerifyForm: React.FC<VerifyFormProps> = ({
         />
       </div>
       {errors.verificationCode && <p>{errors.verificationCode.message}</p>}
-      <button type="submit">Verify Code</button>
+      {serverError && <p className="form-error">{serverError}</p>}
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? "Verifying..." : "Verify Code"}
+      </button>
     </form>
   );
 };
