@@ -36,15 +36,17 @@ public class MessageService {
         message.setChannel(channel);
         message.setUser(user);
         message.setContent(req.content());
+        message.setCreatedUserId(req.senderId());
+        message.setUpdatedUserId(req.senderId());
 
         Message savedMessage = messageRepository.save(message);
         return new MessageResponseDto(
             savedMessage.getId(),
-            req.channelId(),
-            req.senderId(),
+            user.getUsername(),
             savedMessage.getContent(),
             savedMessage.getCreatedAt(),
-            savedMessage.getCreatedUserId()
+            savedMessage.getCreatedUserId(),
+            req.channelId()
         );
     }
 
@@ -52,11 +54,11 @@ public class MessageService {
         return messageRepository.findByChannelId(channelId).stream()
             .map(message -> new MessageResponseDto(
                 message.getId(),
-                message.getChannel().getId(),
-                message.getUser().getId(),
+                message.getUser().getUsername(),
                 message.getContent(),
                 message.getCreatedAt(),
-                message.getCreatedUserId()
+                message.getCreatedUserId(),
+                message.getChannel().getId()
             ))
             .toList();
     }

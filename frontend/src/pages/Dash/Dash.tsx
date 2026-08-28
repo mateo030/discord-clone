@@ -8,9 +8,9 @@ import { SideBar } from "../../components/SideBar";
 import { useAuth } from "../../context/authContext";
 
 import { channelAPI } from "@/api/channelAPI";
-import { messageAPI } from "@/api/messageAPI";
 import { roomAPI } from "@/api/roomAPI";
 import { roomMemberAPI } from "@/api/roomMemberAPI";
+import { useChat } from "@/hooks/useChat";
 import { useInitialize } from "@/hooks/useInitialize";
 import type {
   CreateChannelFormData,
@@ -25,13 +25,12 @@ export const Dash: React.FC = () => {
   const [selectedRoomId, setSelectedRoomId] = useState<string>("");
   const [selectedChannelId, setSelectedChannelId] = useState<string>("");
   const [selectedChannelName, setSelectedChannelName] = useState<string>("");
-  const { rooms, channels, messages } = useInitialize(
-    selectedRoomId,
-    selectedChannelId,
-  );
+  const { rooms, channels } = useInitialize(selectedRoomId);
+  const [code, setCode] = useState<string>("");
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { messages, sendMessage } = useChat(selectedChannelId);
 
   const handleRoomCLick = (roomId: string) => {
     setSelectedRoomId(roomId);
@@ -72,18 +71,14 @@ export const Dash: React.FC = () => {
     createChannelMutation.mutate(data);
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
-
   const createRoomMutation = useMutation({
     mutationFn: (data: CreateRoomFormData) =>
       roomAPI.post(false, {
-        roomId: selectedRoomId,
+        id: user?.id,
         roomName: data.roomName,
       }),
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      setCode(data.code);
       await queryClient.invalidateQueries({ queryKey: ["rooms", user?.id] });
     },
     onError: (error: unknown) => {
@@ -122,20 +117,6 @@ export const Dash: React.FC = () => {
     joinMutation.mutate(payload);
   };
 
-  const messageMutation = useMutation({
-    mutationFn: (
-      payload: MessageData & { channelId: string; senderId: string },
-    ) => messageAPI.post(false, payload),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["messages", selectedChannelId],
-      });
-    },
-    onError: (error: unknown) => {
-      console.error("Message failed: ", error);
-    },
-  });
-
   const handleSendMessage: SubmitHandler<MessageData> = async (data) => {
     if (!user) {
       console.error("Current user doesn't exist! Unable to send message");
@@ -148,7 +129,12 @@ export const Dash: React.FC = () => {
       content: data.content,
     };
 
-    messageMutation.mutate(payload);
+    sendMessage(payload);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
   };
 
   return (
@@ -162,6 +148,7 @@ export const Dash: React.FC = () => {
         onRoomJoin={handleRoomJoin}
         onRoomSubmit={handleCreateRoom}
         onChannelSubmit={handleCreateChannel}
+        code={code}
       />
       <Chatroom
         selectedChannelName={selectedChannelName}

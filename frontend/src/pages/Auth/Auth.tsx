@@ -14,7 +14,6 @@ import type {
   VerifyFormData,
 } from "@/types/types";
 
-// TODO: Change to enum
 type FormMode = "login" | "register" | "verify";
 
 export const Auth: React.FC = () => {

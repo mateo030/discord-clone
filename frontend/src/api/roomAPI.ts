@@ -20,9 +20,9 @@ export const roomAPI = {
     }
   },
 
-  post: async function (cancel = false, params: any): Promise<Room[]> {
+  post: async function (cancel = false, params: any): Promise<Room> {
     try {
-      const response = await privateApi.request<Room[]>({
+      const response = await privateApi.request<Room>({
         url: "/rooms",
         method: "POST",
         data: params,

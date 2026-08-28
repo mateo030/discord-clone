@@ -3,12 +3,12 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import type { RegisterFormData } from "../types/types";
 
 type FormMode = "login" | "register" | "verify";
-interface RegistrationFormProps {
+type RegistrationFormProps = {
   onSubmit: SubmitHandler<RegisterFormData>;
   toggleMode: (formMode: FormMode) => void;
   isLoading?: boolean;
   serverError?: string;
-}
+};
 
 export const RegisterForm: React.FC<RegistrationFormProps> = ({
   onSubmit,
@@ -50,7 +50,7 @@ export const RegisterForm: React.FC<RegistrationFormProps> = ({
           })}
         />
       </div>
-      {errors.username && <p>{errors.username.message}</p>}
+      {errors.username && <p className="error">{errors.username.message}</p>}
       <div className="form-group">
         {/* Email regex explanation:
               1. Local part: letters, numbers, dots, underscores, percent, plus, and hyphens (one or more)
@@ -69,7 +69,7 @@ export const RegisterForm: React.FC<RegistrationFormProps> = ({
             },
           })}
         />
-        {errors.email && <p>{errors.email.message}</p>}
+        {errors.email && <p className="error">{errors.email.message}</p>}
       </div>
       <div className="form-group">
         {/* Password regex explanation:
@@ -88,7 +88,7 @@ export const RegisterForm: React.FC<RegistrationFormProps> = ({
             },
           })}
         />
-        {errors.password && <p>{errors.password.message}</p>}
+        {errors.password && <p className="error">{errors.password.message}</p>}
       </div>
       <div className="form-group">
         <label htmlFor="confirmPassword">Confirm Password</label>
@@ -102,7 +102,9 @@ export const RegisterForm: React.FC<RegistrationFormProps> = ({
           })}
         />
       </div>
-      {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
+      {errors.confirmPassword && (
+        <p className="error">{errors.confirmPassword.message}</p>
+      )}
       {serverError && <p className="form-error">{serverError}</p>}
       <span>Forgot Password?</span>
       <span onClick={() => toggleMode("login")}>Already have an account?</span>

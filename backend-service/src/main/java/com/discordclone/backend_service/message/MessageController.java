@@ -5,8 +5,9 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,10 +26,13 @@ public class MessageController {
         this.messageService = messageService;
     }
 
-    @PostMapping
-    public ResponseEntity<MessageResponseDto> createMessage(@Valid @RequestBody MessageRequestDto req) {
+    // Maps to "/app/chat" destination sent by client
+    @MessageMapping("/chat")
+    // Broadcast return value to client
+    @SendTo("/topic/messages")
+    public MessageResponseDto createMessage(@Valid @RequestBody MessageRequestDto req) {
         MessageResponseDto messageResponse = messageService.createMessage(req);
-        return ResponseEntity.status(HttpStatus.CREATED).body(messageResponse); 
+        return messageResponse; 
     }
 
     @GetMapping

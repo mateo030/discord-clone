@@ -1,14 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { channelAPI } from "@/api/channelAPI";
-import { messageAPI } from "@/api/messageAPI";
 import { roomAPI } from "@/api/roomAPI";
 import { useAuth } from "@/context/authContext";
 
-export const useInitialize = (
-  roomId: string | null,
-  channelId: string | null,
-) => {
+export const useInitialize = (roomId: string | null) => {
   const { user } = useAuth();
 
   const roomQuery = useQuery({
@@ -23,18 +19,10 @@ export const useInitialize = (
     queryFn: () => channelAPI.get(roomId!),
   });
 
-  const messageQuery = useQuery({
-    queryKey: ["messages", channelId],
-    enabled: !!channelId,
-    queryFn: () => messageAPI.get(channelId!),
-  });
-
   return {
     rooms: roomQuery.data ?? [],
     channels: channelQuery.data ?? [],
-    messages: messageQuery.data ?? [],
     roomQuery,
     channelQuery,
-    messageQuery,
   };
 };

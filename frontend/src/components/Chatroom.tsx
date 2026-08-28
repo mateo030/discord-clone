@@ -4,12 +4,13 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { Modal } from "@/components/Modal";
 import type { Message } from "@/types/api";
 import type { MessageData } from "@/types/types";
+import { formatDate } from "@/utils/formatDate";
 
-interface ChatroomProps {
+type ChatroomProps = {
   selectedChannelName: string;
   messageList: Message[];
   onMessageSend: SubmitHandler<MessageData>;
-}
+};
 
 export const Chatroom: React.FC<ChatroomProps> = ({
   selectedChannelName,
@@ -22,30 +23,30 @@ export const Chatroom: React.FC<ChatroomProps> = ({
     formState: { errors },
   } = useForm<MessageData>();
   const [isDmModalOpen, setIsDmModalOpen] = useState<boolean>(false);
+
   return (
     <div className="chatroom">
       <div className="chatroom-header">
-        <h2># {selectedChannelName}</h2>
+        <h2>
+          # {selectedChannelName ? selectedChannelName : "No channel selected"}
+        </h2>
       </div>
       <div className="chatroom-body">
-        {messageList.map((message, index) => (
-          <div key={index} className="message">
-            <div className="message-name">
-              <h4>
-                <button
-                  className="message-name-button"
-                  onClick={() => console.log("username clicked")}
-                >
-                  User
-                </button>
-              </h4>
-              <small>{message.createdAt}</small>
+        {messageList &&
+          messageList.map((message, index) => (
+            <div key={index} className="message">
+              <div className="message-name">
+                <p>{message.senderName}</p>
+                <small>{formatDate(message.createdAt)}</small>
+              </div>
+              <p>{message.content}</p>
             </div>
-            <p>{message.content}</p>
-          </div>
-        ))}
+          ))}
       </div>
+      {/* Chat input */}
+
       <div className="chatroom-composer">
+        {errors.content && <p>{errors.content.message}</p>}
         <form onSubmit={handleSubmit(onMessageSend)}>
           <textarea
             id="content"
@@ -59,14 +60,13 @@ export const Chatroom: React.FC<ChatroomProps> = ({
               },
             })}
           ></textarea>
-          <div className="composer-toolbar">
-            <button type="submit" className="btn-send">
-              Send
-            </button>
-          </div>
-          {errors.content && <p>{errors.content.message}</p>}
+          <button type="submit" className="btn-send">
+            Send
+          </button>
         </form>
       </div>
+
+      {/* Modal */}
       <Modal
         isOpen={isDmModalOpen}
         onClose={() => setIsDmModalOpen(false)}

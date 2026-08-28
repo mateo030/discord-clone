@@ -17,3 +17,4 @@ Thumbs.db
 
 # Application Properties
 application-local.properties
+application-prod.properties

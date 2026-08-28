@@ -5,9 +5,9 @@ import java.util.UUID;
 
 public record MessageResponseDto(
     UUID id,
-    UUID channelId,
-    UUID senderId,
+    String senderName,
     String content,
     LocalDateTime createdAt,
-    UUID createdUserId
+    UUID createdUserId,
+    UUID channelId
 ) {}

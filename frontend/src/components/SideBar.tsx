@@ -9,7 +9,7 @@ import type {
   CreateChannelFormData,
 } from "@/types/types";
 
-interface SideBarProps {
+type SideBarProps = {
   roomList: Room[];
   channelList: Channel[];
   onRoomClick(roomId: string): void;
@@ -18,7 +18,8 @@ interface SideBarProps {
   onRoomSubmit: SubmitHandler<CreateRoomFormData>;
   onRoomJoin: SubmitHandler<JoinRoomFormData>;
   onChannelSubmit: SubmitHandler<CreateChannelFormData>;
-}
+  code: string;
+};
 
 export const SideBar: React.FC<SideBarProps> = ({
   roomList,
@@ -29,6 +30,7 @@ export const SideBar: React.FC<SideBarProps> = ({
   onRoomJoin,
   onRoomSubmit,
   onChannelSubmit,
+  code,
 }) => {
   const [isRoomModalOpen, setIsRoomModalOpen] = useState<boolean>(false);
   const [isChannelModalOpen, setIsChannelModalOpen] = useState<boolean>(false);
@@ -100,6 +102,7 @@ export const SideBar: React.FC<SideBarProps> = ({
       </div>
       <div className="sidebar-group">
         <h3>Direct Messages</h3>
+        <p>Coming soon...</p>
         <ul>
           {/* {dmChannel.map((channel, index) => (
             <li
@@ -143,6 +146,7 @@ export const SideBar: React.FC<SideBarProps> = ({
             <p></p>
             <button type="submit">Create</button>
           </div>
+          {code && <p>Room Code: {code}</p>}
         </form>
         <form onSubmit={handleRoomJoinSubmit(onRoomJoin)}>
           <h2>Have an invite already?</h2>

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import { authApi } from "@/api/authApi";
 import type { User } from "@/types/api";
@@ -29,20 +30,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     isAuthenticated: false,
     isLoading: true,
   });
+  const location = useLocation();
 
   useEffect(() => {
     const checkCurrentUser = async () => {
       try {
-        console.log("Checking current user authorization...");
+        if (location.pathname === "/") return;
         const currentUserResponse = await authApi.currentUser(false);
         console.log(currentUserResponse);
 
         if (!currentUserResponse) {
-          console.log("Current user session does not exist");
+          console.error("Current user session does not exist");
           return;
         }
-
-        console.log("Current user: " + currentUserResponse);
 
         setAuthState({
           user: currentUserResponse,
@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     };
     checkCurrentUser();
-  }, []);
+  }, [location.pathname]);
 
   const login = (user: User, role: string) => {
     setAuthState({
@@ -69,9 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = () => {
-    const logoutResponse = authApi.logout(false);
-    console.log(logoutResponse);
-    console.log("Logout Successful");
+    authApi.logout(false);
   };
 
   return (

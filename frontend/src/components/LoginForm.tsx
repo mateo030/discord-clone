@@ -4,12 +4,12 @@ import type { LoginFormData } from "@/types/types";
 
 type FormMode = "login" | "register" | "verify";
 
-interface LoginFormProps {
+type LoginFormProps = {
   onSubmit: SubmitHandler<LoginFormData>;
   toggleMode: (formMode: FormMode) => void;
   isLoading?: boolean;
   serverError?: string;
-}
+};
 
 export const LoginForm: React.FC<LoginFormProps> = ({
   onSubmit,
@@ -39,7 +39,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           })}
         />
       </div>
-      {errors.email && <p>{errors.email.message}</p>}
+      {errors.email && <p className="error">{errors.email.message}</p>}
       <div className="form-group">
         <label htmlFor="password">Password</label>
         <input
@@ -50,7 +50,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           })}
         />
       </div>
-      {errors.password && <p>{errors.password.message}</p>}
+      {errors.password && <p className="error">{errors.password.message}</p>}
       {serverError && <p className="form-error">{serverError}</p>}
       <span>Forgot Password?</span>
       <span onClick={() => toggleMode("register")}>Dont have an account?</span>

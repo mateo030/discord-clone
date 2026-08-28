@@ -48,14 +48,10 @@ export interface Channel {
 
 export interface Message {
   id: string;
-  channelId: string;
-  userId: string;
+  senderName: string;
   content: string;
   createdAt: string;
-  createdUser: string;
-  updatedAt: string;
-  updatedUser: string;
-  deleteFlag: boolean;
+  createdUserId: string;
 }
 
 export interface User {

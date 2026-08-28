@@ -19,7 +19,7 @@ public class SignupRequest {
 
     @NotBlank
     @Size(min = 8, max = 20)
-    @Pattern(regexp = "^[a-zA-Z0-9]+(?:[._][a-zA-Z0-9]+)*$}", message = "Username is invalid")
+    @Pattern(regexp = "^[a-zA-Z0-9]+(?:[._][a-zA-Z0-9]+)*$", message = "Username is invalid")
     private String username;
 
     @NotBlank

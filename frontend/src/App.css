@@ -22,3 +22,7 @@ a {
   color: var(--accent-blue);
   text-decoration: none;
 }
+
+.error {
+  color: red;
+}
