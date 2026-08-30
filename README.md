@@ -1,6 +1,8 @@
 # What is Whisper?<br>
 Whisper is a real time chat application where you can join channels within private rooms and message other people. Built with React and Spring Boot.
 
+⚠️ This build is not finished. Expect missing features and bugs.
+
 **How to run:**
 
 "npm install" to install dependencies
@@ -27,6 +29,8 @@ Dashboard
 
 # Whisperとは？<br>
 他のユーザとやり取りができるチャットアプリである。ReactとSpring Bootを使用して開発を行っています。
+
+⚠️ 開発が完了していないため、まだ実装されていない機能があり、バグが発生する可能性もあります。
 
 **実行手順**
 
